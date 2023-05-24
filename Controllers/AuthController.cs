@@ -1,4 +1,4 @@
-﻿using backend.Authentication;
+﻿using backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +13,7 @@ namespace backend.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
+        public static User user = new ();
         private readonly IConfiguration _configuration;
 
         public AuthController(IConfiguration configuration)
@@ -21,8 +21,8 @@ namespace backend.Controllers
             this._configuration = configuration;
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        [HttpPost("register",Name = "Register")]
+        public ActionResult<User> Register(UserDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -33,8 +33,8 @@ namespace backend.Controllers
             return Ok(user);
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserDto request)
+        [HttpPost("login", Name = "Login")]
+        public ActionResult<string> Login(UserDto request)
         {
             if (user.UserName != request.UserName)
             {
@@ -60,7 +60,7 @@ namespace backend.Controllers
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                _configuration.GetSection("Authentication:Token").Value));
+                _configuration.GetSection("Authentication:Token").Value!));
 
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
