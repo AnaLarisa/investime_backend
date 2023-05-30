@@ -20,7 +20,7 @@ namespace backend.Data.Repositories
             return _meetings.Find(meeting => true).ToList();
         }
 
-        public Meeting GetMeetingById(Guid id)
+        public Meeting GetMeetingById(int id)
         {
             return _meetings.Find(meeting => meeting.Id == id).FirstOrDefault();
         }
@@ -35,7 +35,7 @@ namespace backend.Data.Repositories
             _meetings.ReplaceOne(m => m.Id == meeting.Id, meeting);
         }
 
-        public void DeleteMeeting(Guid id)
+        public void DeleteMeeting(int id)
         {
             _meetings.DeleteOne(m => m.Id == id);
         }

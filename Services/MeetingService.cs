@@ -17,7 +17,7 @@ namespace backend.Services
             return _repository.GetMeetings();
         }
 
-        public Meeting GetMeetingById(Guid id)
+        public Meeting GetMeetingById(int id)
         {
             return _repository.GetMeetingById(id);
         }
@@ -32,7 +32,7 @@ namespace backend.Services
             _repository.UpdateMeeting(meeting);
         }
 
-        public void DeleteMeeting(Guid id)
+        public void DeleteMeeting(int id)
         {
             _repository.DeleteMeeting(id);
         }
