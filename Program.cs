@@ -1,5 +1,6 @@
 using backend.Data.Repositories;
 using backend.Services;
+using MongoDB.Driver;
 
 namespace backend;
 
@@ -12,17 +13,23 @@ public class Program
         // Add services to the container.
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", true, true)
             .Build();
 
-        // Use the configuration values to register the repository in the DI container
-        builder.Services.AddScoped<IMeetingRepository>(provider =>
-            new MeetingRepository( new DatabaseManager(config.GetConnectionString("MongoDb")!,
-                config.GetValue<string>("MongoDb:DatabaseName")!)
-            )
-        );
 
+        var connectionString = config.GetConnectionString("MongoDb")!;
+        var databaseName = config.GetValue<string>("MongoDb:DatabaseName");
+
+        builder.Services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
+        builder.Services.AddScoped<IMongoDatabase>(sp =>
+        {
+            var client = sp.GetRequiredService<IMongoClient>();
+            return client.GetDatabase(databaseName);
+        });
+
+        builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
         builder.Services.AddScoped<IMeetingService, MeetingService>();
+
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
