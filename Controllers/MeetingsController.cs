@@ -1,6 +1,7 @@
 ﻿using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 namespace backend.Controllers;
 
@@ -22,17 +23,34 @@ public class MeetingsController : Controller
         return Ok(meetings);
     }
 
+
+    [HttpGet("{id}", Name = "GetMeetingById")]
+    public IActionResult GetMeetingById(string id)
+    {
+        var meeting = _meetingService.GetMeetingById(id);
+        return Ok(meeting);
+    }
+
+
     [HttpPost(Name = "AddMeeting")]
     public async Task<IActionResult> AddMeeting(Meeting meeting)
     {
-        if (ModelState.IsValid)
-        {
-            await _meetingService.AddMeeting(meeting);
-            return Ok($"Added meeting with id = {meeting.Id}");
-        }
+        if (!ModelState.IsValid) return BadRequest($"One or more fields are not correct \n{meeting}");
 
-        // If the model is not valid, return the create view with the model to show validation errors
-        return Ok(meeting);
+        await _meetingService.AddMeeting(meeting);
+        return Ok($"Added meeting with id = {meeting.Id}");
+    }
+
+
+    [HttpPut("{id}", Name = "UpdateMeeting")]
+    public IActionResult UpdateMeeting(string id, [FromBody] Meeting updatedMeeting)
+    {
+        if (!ModelState.IsValid) return BadRequest($"One or more fields are not correct \n{updatedMeeting}");
+        
+        updatedMeeting.Id = id;
+        _meetingService.UpdateMeeting(updatedMeeting);
+
+        return Ok($"Updated meeting with Id:\n{updatedMeeting.Id}");
     }
 
     [HttpDelete("{id}", Name = "RemoveMeeting")]

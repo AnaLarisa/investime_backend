@@ -1,5 +1,7 @@
 ﻿using backend.Data.Repositories;
 using backend.Models;
+using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 
 namespace backend.Services;
 
@@ -19,6 +21,10 @@ public class MeetingService : IMeetingService
 
     public Meeting GetMeetingById(string id)
     {
+        if (id.IsNullOrEmpty())
+        {
+            throw new ArgumentException("Meeting ID is required.");
+        }
         return _repository.GetMeetingById(id);
     }
 
@@ -29,6 +35,11 @@ public class MeetingService : IMeetingService
 
     public void UpdateMeeting(Meeting meeting)
     {
+        if (meeting.Id.IsNullOrEmpty())
+        {
+            throw new ArgumentException("Meeting ID is required.");
+        }
+
         _repository.UpdateMeeting(meeting);
     }
 

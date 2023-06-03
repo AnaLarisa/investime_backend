@@ -1,4 +1,5 @@
 ﻿using backend.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace backend.Data.Repositories;
@@ -27,9 +28,11 @@ public class MeetingRepository : IMeetingRepository
         await _meetings.InsertOneAsync(meeting);
     }
 
-    public void UpdateMeeting(Meeting meeting)
+    public void UpdateMeeting(Meeting updatedMeeting)
     {
-        _meetings.ReplaceOne(m => m.Id == meeting.Id, meeting);
+        var objectId = new ObjectId(updatedMeeting.Id);
+        var filter = Builders<Meeting>.Filter.Eq("_id", objectId);
+        _meetings.ReplaceOne(filter, updatedMeeting);
     }
 
     public void DeleteMeeting(string id)

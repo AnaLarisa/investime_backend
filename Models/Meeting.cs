@@ -7,7 +7,6 @@ namespace backend.Models;
 
 public class Meeting
 {
-    [JsonIgnore]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
@@ -30,11 +29,13 @@ public class Meeting
 
     public string? Location { get; set; }
 
-    [Required] public MeetingType Type { get; set; }
+    [Required]
+    public MeetingType Type { get; set; }
 
     public string? Description { get; set; }
 
     public string? MeetingNotes { get; set; }
 
-    [Required] public string ClientName { get; set; }
+    [Required]
+    public string ClientName { get; set; }
 }
