@@ -1,13 +1,12 @@
-﻿namespace backend.Models
+﻿namespace backend.Models;
+
+public enum MeetingType
 {
-    public enum MeetingType
-    {
-        Discovery,
-        InvestmentPlan,
-        MutualCommitment,
-        FollowUp45Day,
-        RegularProgress,
-        Seminar,
-        Internal
-    }
+    Discovery,
+    InvestmentPlan,
+    MutualCommitment,
+    FollowUp45Day,
+    RegularProgress,
+    Seminar,
+    Internal
 }

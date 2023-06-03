@@ -5,8 +5,8 @@ namespace backend.Services;
 public interface IMeetingService
 {
     IEnumerable<Meeting> GetMeetings();
-    Meeting GetMeetingById(int id);
-    void AddMeeting(Meeting meeting);
+    Meeting GetMeetingById(string id);
+    Task AddMeeting(Meeting meeting);
     void UpdateMeeting(Meeting meeting);
-    void DeleteMeeting(int id);
+    void DeleteMeeting(string id);
 }
