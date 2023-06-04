@@ -1,12 +1,13 @@
 ﻿using backend.Models;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
 namespace backend.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
+[ApiController, Authorize(Roles = "User")]
 public class MeetingsController : Controller
 {
     private readonly IMeetingService _meetingService;
@@ -16,7 +17,7 @@ public class MeetingsController : Controller
         _meetingService = meetingService;
     }
 
-    [HttpGet(Name = "GetAllMeetings")]
+    [HttpGet(Name = "GetAllMeetings"), Authorize(Roles = "Admin")]
     public IActionResult GetAllMeetings()
     {
         var meetings = _meetingService.GetMeetings();
