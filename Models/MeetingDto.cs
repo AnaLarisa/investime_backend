@@ -1,16 +1,9 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace backend.Models;
 
-public class Meeting
+public class MeetingDto
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
-
     public string Title { get; set; } = "Meeting";
 
     [Required]
@@ -24,20 +17,18 @@ public class Meeting
     public string Time { get; set; }
 
     [Required]
-    [Range(1, int.MaxValue, ErrorMessage = "Value must be greater than zero.")]
+    [Range(1, int.MaxValue, ErrorMessage = "Duration value must be greater than zero.")]
     public int Duration { get; set; } // In minutes
 
     public string? Location { get; set; }
 
-    [Required] 
+    [Required]
     public MeetingType Type { get; set; }
 
     public string? Description { get; set; }
 
     public string? MeetingNotes { get; set; }
 
-    [Required] 
-    public string ClientName { get; set; }
     [Required]
-    public string UserId { get; set; }
+    public string ClientName { get; set; }
 }

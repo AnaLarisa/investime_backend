@@ -31,9 +31,14 @@ public class Program
             return client.GetDatabase(databaseName);
         });
 
+
+
         builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IMeetingService, MeetingService>();
-        builder.Services.AddScoped<AuthService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+
+        builder.Services.AddHttpContextAccessor();
 
 
         builder.Services.AddControllers();
@@ -49,6 +54,9 @@ public class Program
             });
             options.OperationFilter<SecurityRequirementsOperationFilter>();
         });
+
+
+
         builder.Services.AddAuthentication().AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters
@@ -60,6 +68,8 @@ public class Program
                     builder.Configuration.GetSection("Authentication:Token").Value!))
             };
         });
+
+
 
         var app = builder.Build();
 

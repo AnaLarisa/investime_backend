@@ -2,17 +2,16 @@
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 
 namespace backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize(Roles = "User")]
-public class MeetingsController : Controller
+public class MeetingController : Controller
 {
     private readonly IMeetingService _meetingService;
 
-    public MeetingsController(IMeetingService meetingService)
+    public MeetingController(IMeetingService meetingService)
     {
         _meetingService = meetingService;
     }
@@ -34,24 +33,23 @@ public class MeetingsController : Controller
 
 
     [HttpPost(Name = "AddMeeting")]
-    public async Task<IActionResult> AddMeeting(Meeting meeting)
+    public async Task<ActionResult<Meeting>> AddMeeting(MeetingDto meetingDto)
     {
-        if (!ModelState.IsValid) return BadRequest($"One or more fields are not correct \n{meeting}");
+        if (!ModelState.IsValid) return BadRequest($"One or more fields are not correct \n{meetingDto}");
 
-        await _meetingService.AddMeeting(meeting);
-        return Ok($"Added meeting with id = {meeting.Id}");
+        var meeting = await _meetingService.AddMeeting(meetingDto);
+        return Ok(meeting);
     }
 
 
     [HttpPut("{id}", Name = "UpdateMeeting")]
-    public IActionResult UpdateMeeting(string id, [FromBody] Meeting updatedMeeting)
+    public IActionResult UpdateMeeting(string id, [FromBody] MeetingDto updatedMeetingDto)
     {
-        if (!ModelState.IsValid) return BadRequest($"One or more fields are not correct \n{updatedMeeting}");
-        
-        updatedMeeting.Id = id;
-        _meetingService.UpdateMeeting(updatedMeeting);
+        if (!ModelState.IsValid) return BadRequest($"One or more fields are not correct \n{updatedMeetingDto}");
 
-        return Ok($"Updated meeting with Id:\n{updatedMeeting.Id}");
+        _meetingService.UpdateMeeting(id, updatedMeetingDto);
+
+        return Ok($"Updated meeting with Id:\n{id}");
     }
 
     [HttpDelete("{id}", Name = "RemoveMeeting")]
