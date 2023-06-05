@@ -8,11 +8,10 @@ namespace backend.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    public static User user = new User();
     private readonly IConfiguration _configuration;
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
-    public AuthController(IConfiguration configuration, AuthService authService)
+    public AuthController(IConfiguration configuration, IAuthService authService)
     {
         _configuration = configuration;
         _authService = authService;
@@ -20,20 +19,16 @@ public class AuthController : ControllerBase
 
     [HttpPost("register", Name = "Register")]
     public ActionResult<User> Register(UserDto request)
-    {
-        _authService.CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
-
-        user.UserName = request.UserName;
-        user.PasswordHash = passwordHash;
-        user.PasswordSalt = passwordSalt;
-
-        return Ok(user);
+    { 
+        return Ok(_authService.CreateUser(request));
     }
 
     [HttpPost("login", Name = "Login")]
     public ActionResult<string> Login(UserDto request)
     {
-        if (user.UserName != request.UserName)
+        var user = _authService.GetUserByUserName(request.UserName);
+
+        if (user == null)
             return BadRequest("The user was not found");
 
         if (!_authService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
@@ -42,5 +37,12 @@ public class AuthController : ControllerBase
         var token = _authService.CreateToken(user);
 
         return Ok(token);
+    }
+
+    //to be modified in  GetAllConsultants
+    [HttpGet("/users", Name = "GetAllUsers")]
+    public ActionResult<IList<User>> GetAllUsers()
+    {
+        return Ok(_authService.GetAllUsers());
     }
 }

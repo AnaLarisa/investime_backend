@@ -6,7 +6,7 @@ public interface IMeetingService
 {
     IEnumerable<Meeting> GetMeetings();
     Meeting GetMeetingById(string id);
-    Task AddMeeting(Meeting meeting);
-    void UpdateMeeting(Meeting meeting);
+    Task<Meeting> AddMeeting(MeetingDto meetingDto);
+    public void UpdateMeeting(string id, MeetingDto meetingDto);
     void DeleteMeeting(string id);
 }
