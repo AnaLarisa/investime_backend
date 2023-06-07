@@ -1,5 +1,6 @@
 using System.Text;
 using backend.Data.Repositories;
+using backend.Repositories;
 using backend.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -35,8 +36,11 @@ public class Program
 
         builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IRegistrationRequestRepository, RegistrationRequestRepository>();
+
         builder.Services.AddScoped<IMeetingService, MeetingService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IRegistrationRequestService, RegistrationRequestService>();
 
         builder.Services.AddHttpContextAccessor();
 

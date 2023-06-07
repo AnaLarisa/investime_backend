@@ -37,21 +37,22 @@ public class AuthService : IAuthService
     }
 
 
-    public User CreateUser(UserDto userDto)
+    public User CreateUserWithDefaultPassword(RegistrationRequest registrationRequest)
     {
-        CreatePasswordHash(userDto.Password, out var passwordHash, out var passwordSalt);
-
+        CreatePasswordHash("InvesTime&User123*", out var passwordHash, out var passwordSalt);
         var user = new User
         {
-            UserName = userDto.UserName,
+            FirstName = registrationRequest.FirstName,
+            LastName = registrationRequest.LastName,
+            Username = registrationRequest.Username,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
-            IsAdmin = false
+            IsAdmin = false,
+            ManagerUsername = registrationRequest.ManagerUsername,
+            Email = registrationRequest.Email,
         };
 
-        user.Id = _userRepository.CreateUser(user).Id;
-
-        return user;
+        return _userRepository.CreateUser(user);
     }
 
 
@@ -59,7 +60,7 @@ public class AuthService : IAuthService
     {
         List<Claim> claims = new List<Claim>
         {
-            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Name, user.Username),
             new(ClaimTypes.NameIdentifier, user.Id)
         };
 
