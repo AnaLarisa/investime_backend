@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using backend.Validators;
+using System.ComponentModel.DataAnnotations;
 
 namespace backend.Models.DTO;
 
@@ -23,7 +24,8 @@ public class MeetingDto
     public string? Location { get; set; }
 
     [Required]
-    public MeetingType Type { get; set; }
+    [MeetingTypeValidation] 
+    public string Type { get; set; } = "Internal";
 
     public string? Description { get; set; }
 

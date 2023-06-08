@@ -21,14 +21,6 @@ public class AuthController : ControllerBase
         _registrationRequestService = registrationRequestService;
     }
 
-
-    // [HttpPost("insertAdmin", Name = "InsertAdmin")] // testing purposes, delete afterwards
-    // public ActionResult<User> AskForAccount(RegistrationRequest registrationRequest)
-    // {
-    //     return _authService.CreateUserWithDefaultPassword(registrationRequest); // make admin from database
-    // }
-
-
     [HttpPost("askForAccount", Name = "AskForAccount")]
     public ActionResult<RegistrationRequest> AskForAccount(RegistrationRequestDto request)
     {
@@ -47,20 +39,21 @@ public class AuthController : ControllerBase
 
 
     [HttpGet("registration-requests/{managerUsername}", Name = "GetRegistrationRequestsByManager"), Authorize(Roles = "Admin")]
-    public ActionResult<IList<RegistrationRequest>> GetRegistrationRequestsByManager(string managerUsername)
+    public async Task<ActionResult<IList<RegistrationRequest>>> GetRegistrationRequestsByManager(string managerUsername)
     {
-        var requests = _registrationRequestService.GetRegistrationRequestsByManagerName(managerUsername);
+        var requests = await _registrationRequestService.GetRegistrationRequestsByManagerName(managerUsername);
 
         return Ok(requests);
     }
 
 
     [HttpDelete("registration-requests/{requestId}/delete", Name = "RejectRegistrationRequest"), Authorize(Roles = "Admin")]
-    public ActionResult<bool> RejectRegistrationRequest(string requestId)
+    public async Task<ActionResult<bool>> RejectRegistrationRequest(string requestId)
     {
-        var result = _registrationRequestService.DeleteRegistrationRequest(requestId);
-
-        return Ok(result);
+        var result = await _registrationRequestService.DeleteRegistrationRequest(requestId);
+        if (result == false) return BadRequest("The registration request was not found in the database.");
+        
+        return Ok("The registration request has been successfully deleted.");
     }
 
 
@@ -68,14 +61,19 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<User>> ApproveRegistrationRequest(string requestId)
     {
         var registrationRequest = _registrationRequestService.GetRegistrationRequest(requestId);
-        var user = _authService.CreateUserWithDefaultPassword(registrationRequest);
 
-        if (await _registrationRequestService.ApproveRegistrationRequest(requestId) != true)
+        if (registrationRequest != null)
         {
-            return BadRequest("Failed to approve registration request.");
-        }
+            var user = _authService.CreateUserWithDefaultPassword(registrationRequest);
 
-        return Ok(user);
+            if (await _registrationRequestService.ApproveRegistrationRequest(requestId) != true)
+            {
+                return BadRequest("Failed to approve registration request.");
+            }
+
+            return Ok(user);
+        }
+        return BadRequest("The registration request was not found in the database.");
     }
 
 
