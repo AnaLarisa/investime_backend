@@ -1,5 +1,6 @@
 ﻿using backend.Data.Repositories;
 using backend.Models;
+using backend.Models.DTO;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 

@@ -19,7 +19,7 @@ namespace backend.Data.Repositories
 
         public User GetUserByUsername(string userName)
         {
-            return _users.Find(user => user.UserName == userName).FirstOrDefault();
+            return _users.Find(user => user.Username == userName).FirstOrDefault();
         }
 
         public User CreateUser(User user)

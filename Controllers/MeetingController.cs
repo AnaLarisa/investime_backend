@@ -1,4 +1,5 @@
 ﻿using backend.Models;
+using backend.Models.DTO;
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
