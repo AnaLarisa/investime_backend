@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using backend.Validators;
 
 namespace backend.Models;
 
@@ -30,7 +31,8 @@ public class Meeting
     public string? Location { get; set; } = "Google Meets link";
 
     [Required] 
-    public MeetingType Type { get; set; }
+    [MeetingTypeValidation] 
+    public string Type { get; set; } = "Internal";
 
     public string? Description { get; set; } = string.Empty;
 

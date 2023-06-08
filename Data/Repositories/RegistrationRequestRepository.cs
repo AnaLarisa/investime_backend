@@ -37,9 +37,7 @@ public class RegistrationRequestRepository : IRegistrationRequestRepository
 
     public async Task<bool> DeleteRegistrationRequest(string requestId)
     {
-        var filter = Builders<RegistrationRequest>.Filter.Eq(r => r.Id, requestId);
-        var result = await _collection.DeleteOneAsync(filter);
-
+        var result = await _collection.DeleteOneAsync(r => r.Id == requestId);
         return result.DeletedCount > 0;
     }
 
