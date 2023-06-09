@@ -94,7 +94,7 @@ public class AuthController : ControllerBase
     }
 
     //to be modified in  GetAllConsultants
-    [HttpGet("/users", Name = "GetAllUsers")] //testing purposes rn
+    [HttpGet("/users", Name = "GetAllUsers")]
     public ActionResult<IList<User>> GetAllUsers()
     {
         return Ok(_authService.GetAllUsers());

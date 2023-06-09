@@ -37,10 +37,12 @@ public class Program
         builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IRegistrationRequestRepository, RegistrationRequestRepository>();
+        builder.Services.AddScoped<IArticleFromManagerRepository, ArticleFromManagerRepository>();
 
         builder.Services.AddScoped<IMeetingService, MeetingService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IRegistrationRequestService, RegistrationRequestService>();
+        builder.Services.AddScoped<IArticleFromManagerService, ArticleFromManagerService>();
 
         builder.Services.AddHttpContextAccessor();
 

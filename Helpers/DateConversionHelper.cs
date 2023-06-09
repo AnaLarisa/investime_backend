@@ -2,7 +2,7 @@
 
 namespace backend.Helpers;
 
-public static class ConversionHelper
+public static class DateConversionHelper
 {
     public static DateTime ConvertToDateTime(string date, string time)
     {

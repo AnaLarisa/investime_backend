@@ -35,8 +35,9 @@ public class MeetingRepository : IMeetingRepository
         _meetings.ReplaceOne(filter, updatedMeeting);
     }
 
-    public void DeleteMeeting(string id)
+    public bool DeleteMeeting(string id)
     {
-        _meetings.DeleteOne(m => m.Id == id);
+        var result = _meetings.DeleteOne(m => m.Id == id);
+        return result.DeletedCount > 0;
     }
 }

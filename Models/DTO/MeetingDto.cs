@@ -15,11 +15,11 @@ public class MeetingDto
     [Required]
     [DataType(DataType.Time)]
     [RegularExpression(@"^(?:[01]\d|2[0-3]):[0-5]\d$", ErrorMessage = "Invalid time format. Please use HH:mm format.")]
-    public string Time { get; set; }
+    public string Time { get; set; } = "00:00";
 
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Duration value must be greater than zero.")]
-    public int Duration { get; set; } // In minutes
+    public int Duration { get; set; } = 0;// In minutes
 
     public string? Location { get; set; }
 
@@ -32,5 +32,5 @@ public class MeetingDto
     public string? MeetingNotes { get; set; }
 
     [Required]
-    public string ClientName { get; set; }
+    public string ClientName { get; set; } = string.Empty;
 }

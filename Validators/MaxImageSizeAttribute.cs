@@ -11,7 +11,7 @@ public class MaxImageSizeAttribute : ValidationAttribute
         this._maxSizeInBytes = maxSizeInBytes;
     }
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
         if (value is byte[] imageBytes && imageBytes.Length > _maxSizeInBytes)
         {

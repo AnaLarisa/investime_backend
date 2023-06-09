@@ -1,4 +1,5 @@
 ﻿using backend.Data.Repositories;
+using backend.Helpers;
 using backend.Models;
 using backend.Models.DTO;
 using Microsoft.IdentityModel.Tokens;
@@ -28,12 +29,18 @@ public class MeetingService : IMeetingService
         {
             throw new ArgumentException("Meeting ID is required.");
         }
-        return _repository.GetMeetingById(id);
+
+        var result  = _repository.GetMeetingById(id);
+
+        return result == null
+            ? throw new InvalidOperationException($"The meeting with id = {id} was not found")
+            : result;
     }
 
     public async Task<Meeting> AddMeeting(MeetingDto meetingDto)
     {
-        var meeting = CreateMeeting(meetingDto);
+        var meeting = ObjectConverter.Convert<MeetingDto, Meeting>(meetingDto);
+        meeting.UserId = _authService.GetCurrentUserId()!;
         await _repository.AddMeeting(meeting);
 
         return meeting;
@@ -41,7 +48,7 @@ public class MeetingService : IMeetingService
 
     public void UpdateMeeting(string id, MeetingDto meetingDto)
     {
-        var updatedMeeting = CreateMeeting(meetingDto);
+        var updatedMeeting = ObjectConverter.Convert<MeetingDto, Meeting>(meetingDto);
         var currentMeeting = GetMeetingById(id);
         updatedMeeting.Id = currentMeeting.Id;
         updatedMeeting.UserId = currentMeeting.UserId;
@@ -49,26 +56,19 @@ public class MeetingService : IMeetingService
         _repository.UpdateMeeting(updatedMeeting);
     }
 
-    public void DeleteMeeting(string id)
+    public bool DeleteMeeting(string id)
     {
-        _repository.DeleteMeeting(id);
-    }
-
-
-    private Meeting CreateMeeting(MeetingDto meetingDto)
-    {
-        return new Meeting
+        if (id.IsNullOrEmpty())
         {
-            Title = meetingDto.Title,
-            Date = meetingDto.Date,
-            Time = meetingDto.Time,
-            Duration = meetingDto.Duration,
-            Location = meetingDto.Location,
-            Type = meetingDto.Type,
-            Description = meetingDto.Description,
-            MeetingNotes = meetingDto.MeetingNotes,
-            ClientName = meetingDto.ClientName,
-            UserId = _authService.GetCurrentUserId()!
-        };
+            throw new ArgumentException("Meeting ID is required.");
+        }
+
+        var result = _repository.DeleteMeeting(id);
+        if (result == false)
+        {
+            throw new InvalidOperationException($"Deletion operation failed for meeting with id: {id}");
+        }
+
+        return true;
     }
 }

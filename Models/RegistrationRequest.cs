@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using backend.Validators;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 
@@ -16,7 +17,8 @@ public class RegistrationRequest
     [Required] 
     public string LastName { get; set; } = string.Empty;
 
-    [Required] 
+    [Required]
+    [UniqueUsername]
     public string Username { get; set; } = string.Empty;
 
     [Required]

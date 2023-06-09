@@ -41,5 +41,5 @@ public class Meeting
     [Required] 
     public string ClientName { get; set; } = string.Empty;
     [Required]
-    public string UserId { get; set; }
+    public string UserId { get; set; } = string.Empty;
 }
