@@ -1,7 +1,9 @@
-﻿using backend.Models;
+﻿using backend.Helpers;
+using backend.Models;
 using backend.Models.DTO;
 using backend.Repositories;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Driver;
 
 namespace backend.Services;
 
@@ -26,7 +28,7 @@ public class RegistrationRequestService : IRegistrationRequestService
 
     public RegistrationRequest AddRegistrationRequest(RegistrationRequestDto request)
     {
-        var registrationRequest = CreateRegistrationRequest(request);
+        var registrationRequest = ObjectConverter.Convert<RegistrationRequestDto, RegistrationRequest>(request);
         return _registrationRequestRepository.AddRegistrationRequest(registrationRequest);
     }
 
@@ -38,17 +40,5 @@ public class RegistrationRequestService : IRegistrationRequestService
     public Task<bool> ApproveRegistrationRequest(string requestId)
     {
         return _registrationRequestRepository.ApproveRegistrationRequest(requestId);
-    }
-
-    private RegistrationRequest CreateRegistrationRequest(RegistrationRequestDto requestDto)
-    {
-        return new RegistrationRequest()
-        {
-            FirstName = requestDto.FirstName,
-            LastName = requestDto.LastName,
-            Username = requestDto.Username,
-            ManagerUsername = requestDto.ManagerUsername,
-            Email = requestDto.Email
-        };
     }
 }

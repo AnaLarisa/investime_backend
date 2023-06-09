@@ -9,5 +9,5 @@ public interface IMeetingService
     Meeting GetMeetingById(string id);
     Task<Meeting> AddMeeting(MeetingDto meetingDto);
     public void UpdateMeeting(string id, MeetingDto meetingDto);
-    void DeleteMeeting(string id);
+    bool DeleteMeeting(string id);
 }

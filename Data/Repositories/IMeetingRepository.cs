@@ -8,5 +8,5 @@ public interface IMeetingRepository
     Meeting GetMeetingById(string id);
     Task AddMeeting(Meeting meeting);
     void UpdateMeeting(Meeting meeting);
-    void DeleteMeeting(string id);
+    bool DeleteMeeting(string id);
 }
