@@ -44,8 +44,8 @@ public class User
 
     private static byte[] GetDefaultImage()
     {
-        string defaultImagePath = "default-image.png";
-        byte[] defaultImageBytes = File.ReadAllBytes(defaultImagePath);
+        var defaultImagePath = "assets/default-image.png";
+        var defaultImageBytes = File.ReadAllBytes(defaultImagePath);
 
         return defaultImageBytes;
     }
