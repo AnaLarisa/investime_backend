@@ -18,10 +18,11 @@ public class User
     public string LastName { get; set; } = string.Empty;
 
     [Required]
+    [UniqueUsername]
     public string Username { get; set; } = string.Empty;
 
-    public byte[] PasswordHash { get; set; }
-    public byte[] PasswordSalt { get; set; }
+    public byte[] PasswordHash { get; set; } = new byte[32];
+    public byte[] PasswordSalt { get; set; } = new byte[32];
 
     public bool IsAdmin { get; set; } = false;
 

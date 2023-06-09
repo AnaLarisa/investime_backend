@@ -15,10 +15,14 @@ public class MeetingTypeValidationAttribute : ValidationAttribute
             "Seminar",
             "Internal"
         };
-    public override bool IsValid(object value)
+    public override bool IsValid(object? value)
     {
-        string meetingType = value.ToString() ?? throw new InvalidOperationException("The MeetingType appears to be null.");
+        if (value != null)
+        {
+            var meetingType = value.ToString();
 
-        return ValidMeetingTypes.Contains(meetingType);
+            return ValidMeetingTypes.Contains(meetingType!);
+        }
+        throw new InvalidOperationException("The MeetingType appears to be null.");
     }
 }

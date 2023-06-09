@@ -22,6 +22,11 @@ namespace backend.Data.Repositories
             return _users.Find(user => user.Username == userName).FirstOrDefault();
         }
 
+        public bool ExistsByUsername(string username)
+        {
+            return _users.AsQueryable().Any(user => user.Username == username);
+        }
+
         public User CreateUser(User user)
         {
             _users.InsertOne(user);

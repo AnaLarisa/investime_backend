@@ -104,6 +104,11 @@ public class AuthService : IAuthService
         }
     }
 
+    public bool IsUsernameTaken(string username)
+    { 
+        return _userRepository.ExistsByUsername(username);
+    }
+
     public IList<User> GetAllUsers()
     { 
         return _userRepository.GetAllUsers() ?? new List<User>();

@@ -9,5 +9,6 @@ public interface IAuthService
     public User CreateUserWithDefaultPassword(RegistrationRequest registrationRequest);
     public string CreateToken(User user);
     public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
+    public bool IsUsernameTaken(string username);
     public IList<User> GetAllUsers();
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using backend.Validators;
 
 namespace backend.Models.DTO;
 
@@ -11,6 +12,7 @@ public class RegistrationRequestDto
     public string LastName { get; set; } = string.Empty;
 
     [Required]
+    [UniqueUsername]
     public string Username { get; set; } = string.Empty;
 
     [Required]

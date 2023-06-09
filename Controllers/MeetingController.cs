@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers;
 
 [Route("api/[controller]")]
-[ApiController, Authorize(Roles = "User")]
+[ApiController, Authorize(Roles = "User,Admin")]
 public class MeetingController : Controller
 {
     private readonly IMeetingService _meetingService;
@@ -17,7 +17,7 @@ public class MeetingController : Controller
         _meetingService = meetingService;
     }
 
-    [HttpGet(Name = "GetAllMeetings"), Authorize(Roles = "Admin")]
+    [HttpGet(Name = "GetAllMeetings")]
     public IActionResult GetAllMeetings()
     {
         var meetings = _meetingService.GetMeetings();

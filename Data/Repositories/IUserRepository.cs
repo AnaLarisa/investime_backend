@@ -8,6 +8,7 @@ namespace backend.Data.Repositories
         public void DeleteUser(string id);
         public IList<User> GetAllUsers();
         public User GetUserByUsername(string userName);
+        public bool ExistsByUsername(string username);
         public void UpdateUser(User user);
     }
 }
