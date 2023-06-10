@@ -8,12 +8,12 @@ public class MeetingTypeValidationAttribute : ValidationAttribute
     private static readonly List<string> ValidMeetingTypes = new()
     {
         "Analysis",
-        "Consultation (C1)",
-        "Consultation (C2)",
+        "Consultation(C1)",
+        "Consultation(C2)",
         "Service",
-        "Personal Meeting",
-        "Team Meeting",
-        "Tell party",
+        "PersonalMeeting",
+        "TeamMeeting",
+        "TellParty",
         "Seminar",
         "Training"
     };
