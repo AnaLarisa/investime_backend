@@ -40,4 +40,10 @@ public class MeetingRepository : IMeetingRepository
         var result = _meetings.DeleteOne(m => m.Id == id);
         return result.DeletedCount > 0;
     }
+
+    public bool DeleteAllMeetingsOfUserId(string userId)
+    {
+        var result = _meetings.DeleteMany(m => m.UserId == userId);
+        return result.DeletedCount > 0;
+    }
 }

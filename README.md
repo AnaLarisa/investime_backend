@@ -1,6 +1,6 @@
 # Investime_backend
 ### This is a .Net7 API that serves as backend for the InvesTime project.
-<br><br><br>
+<br><br>
 
 
 # Use Case Diagram
@@ -15,7 +15,7 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 |------------------------------ | ----------------------------- | -------------------------- |
 |Ask for consultant account     | Post consultant request (consultant info)| - get all user requests<br> - approve => insert consultant in database with standard password <br> - decline => delete user request from database|
 |Login/Logout                   | Login/Logout as User          |Login/Logout as Admin       |
-|Edit user profile              | - Get personal user profile <br> - Get personal statistics <br> - Edit user profile fields (apart from personal rank/level)<br> -	Change password| -	Get personal user profile <br> - Get personal statistics <br> - Change password<br> -	Get list of all consultants + personal ranks|
+|Edit user profile              | - Get personal user profile <br> - Get personal statistics <br> - Edit user profile fields (apart from personal rank/level)<br> -	Change password| -	Get personal user profile <br> - Get personal statistics <br> - Change password<br> -	Get list of all consultants + personal ranks<br> - Delete consultant from database|
 |Read business news             | - Get the list of all business news<br> -	Get one business news(external Api)| - Get the list of all business news<br> -	Get one business news(external Api)|
 |Read Info board from manager   | - Get all info articles from manager<br> - Search through titles| -	Get all info articles from manager<br> - Search through article titles <br> - Add articles <br> - Delete article|
 |See personal calendar          |- Add new meeting<br> - Delete meeting <br> - Edit meeting <br> - Get after-quiz questions and post answers to all (in Details section) <br> - Get one meeting <br> - Get all meetings in a month<br>|- Add new meeting<br> - Delete meeting <br> - Edit meeting <br> - Get after-quiz questions and post answers to all (in Details section) <br> - Get one meeting <br> - Get all meetings in a month<br> -  Add seminars (auto-set for everyone)|
@@ -24,12 +24,6 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 <br><br>
-<<<<<<< Updated upstream
-## Database records:
-<br>
-
-<u><b>User account:</b></u>
-=======
 
 
 ### Meeting types:
@@ -43,12 +37,12 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 * Seminar
 * Training
 
+<br><br>
+
+## Database records:
 <br>
 
-## <u>Database records:</u>
-
 <b>User account:</b>
->>>>>>> Stashed changes
 -	string: Id(auto-generated)
 -	string: First Name*
 -	string: Last Name*
@@ -64,12 +58,12 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 -	bool:   MeetingsNotifications (added later)
 <br>
 
-<u><b>Meeting:</b></u>
+<b>Meeting:</b>
 -	string: Id (auto-generated)
 -	string: Title (default value: “Meeting”)
--	Date:  Date*
+-	Date:   Date*
 -	String: Time* (format: “HH:mm”)
--	Int:      Duration*
+-	Int:    Duration*
 -	string: Location
 -	string: MeetingType*
 -	string: Description
@@ -79,16 +73,14 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 -	bool  : quizTaken (default value: false) ---------------!
 <br>
 
-<u><b>Article:</b></u>
+<b>Article:</b>
 -   string: Id (auto-generated)
 -	string: Tittle
 -	string: Content(link)
 -	string: Observations
-<<<<<<< Updated upstream
-=======
 <br>
 
-<b>Registration request:</b>
+<b>RegistrationRequest:</b>
 -   string: Id
 -   string: FirstName*
 -   string: LastName*
@@ -99,4 +91,3 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 <br>
 
 
->>>>>>> Stashed changes

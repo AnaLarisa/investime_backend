@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
+[ApiController, Authorize]
 public class ArticleFromManagerController : Controller
 {
     private IArticleFromManagerService _articleFromManagerService;
@@ -16,7 +16,6 @@ public class ArticleFromManagerController : Controller
     }
 
     [HttpGet(Name = "GetAllArticles")]
-    [Authorize(Roles = "User,Admin")]
     public IActionResult GetAllArticles()
     {
         var articles = _articleFromManagerService.GetArticles();
@@ -24,7 +23,6 @@ public class ArticleFromManagerController : Controller
     }
 
     [HttpGet("{id}", Name = "GetArticleById")]
-    [Authorize(Roles = "User,Admin")]
     public IActionResult GetArticleById(string id)
     {
         var article = _articleFromManagerService.GetArticleById(id);
@@ -60,7 +58,6 @@ public class ArticleFromManagerController : Controller
     }
 
     [HttpGet("search", Name = "SearchArticles")]
-    [Authorize(Roles = "User,Admin")]
     public IActionResult SearchArticles([FromQuery] string title)
     {
         var articles = _articleFromManagerService.SearchArticles(title);

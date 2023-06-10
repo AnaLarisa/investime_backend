@@ -10,12 +10,12 @@ namespace backend.Services;
 public class MeetingService : IMeetingService
 {
     private readonly IMeetingRepository _repository;
-    private IAuthService _authService;
+    private IUserService _userService;
 
-    public MeetingService(IMeetingRepository repository, IAuthService authService)
+    public MeetingService(IMeetingRepository repository, IUserService userService)
     {
         _repository = repository;
-        _authService = authService;
+        _userService = userService;
     }
 
     public IEnumerable<Meeting> GetMeetings()
@@ -40,7 +40,7 @@ public class MeetingService : IMeetingService
     public async Task<Meeting> AddMeeting(MeetingDto meetingDto)
     {
         var meeting = ObjectConverter.Convert<MeetingDto, Meeting>(meetingDto);
-        meeting.UserId = _authService.GetCurrentUserId()!;
+        meeting.UserId = _userService.GetCurrentUserId()!;
         await _repository.AddMeeting(meeting);
 
         return meeting;
