@@ -24,10 +24,31 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 <br><br>
+<<<<<<< Updated upstream
 ## Database records:
 <br>
 
 <u><b>User account:</b></u>
+=======
+
+
+### Meeting types:
+* Analysis,
+* Consultation (C1),
+* Consultation (C2),
+* Service,
+* Personal Meeting,
+* Team Meeting,
+* Tell party,
+* Seminar
+* Training
+
+<br>
+
+## <u>Database records:</u>
+
+<b>User account:</b>
+>>>>>>> Stashed changes
 -	string: Id(auto-generated)
 -	string: First Name*
 -	string: Last Name*
@@ -63,3 +84,19 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 -	string: Tittle
 -	string: Content(link)
 -	string: Observations
+<<<<<<< Updated upstream
+=======
+<br>
+
+<b>Registration request:</b>
+-   string: Id
+-   string: FirstName*
+-   string: LastName*
+-   string: Username*
+-   string: ManagerUsername*
+-   string: Email*
+-   Date: DateTime
+<br>
+
+
+>>>>>>> Stashed changes
