@@ -24,10 +24,25 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 <br><br>
+
+
+### Meeting types:
+* Analysis,
+* Consultation (C1),
+* Consultation (C2),
+* Service,
+* Personal Meeting,
+* Team Meeting,
+* Tell party,
+* Seminar
+* Training
+
+<br><br>
+
 ## Database records:
 <br>
 
-<u><b>User account:</b></u>
+<b>User account:</b>
 -	string: Id(auto-generated)
 -	string: First Name*
 -	string: Last Name*
@@ -43,12 +58,12 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 -	bool:   MeetingsNotifications (added later)
 <br>
 
-<u><b>Meeting:</b></u>
+<b>Meeting:</b>
 -	string: Id (auto-generated)
 -	string: Title (default value: “Meeting”)
--	Date:  Date*
+-	Date:   Date*
 -	String: Time* (format: “HH:mm”)
--	Int:      Duration*
+-	Int:    Duration*
 -	string: Location
 -	string: MeetingType*
 -	string: Description
@@ -58,8 +73,21 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 -	bool  : quizTaken (default value: false) ---------------!
 <br>
 
-<u><b>Article:</b></u>
+<b>Article:</b>
 -   string: Id (auto-generated)
 -	string: Tittle
 -	string: Content(link)
 -	string: Observations
+<br>
+
+<b>RegistrationRequest:</b>
+-   string: Id
+-   string: FirstName*
+-   string: LastName*
+-   string: Username*
+-   string: ManagerUsername*
+-   string: Email*
+-   Date: DateTime
+<br>
+
+
