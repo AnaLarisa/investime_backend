@@ -37,13 +37,29 @@ public class UserController : ControllerBase
         {
             var isPasswordChanged = _userService.ChangePassword(changePasswordDto);
             return !isPasswordChanged 
-                ? StatusCode(500, "Failed to change the password.") 
+                ? BadRequest("Failed to change the password.") 
                 : Ok("Password changed successfully.");
         }
-        catch (Exception e)
+        catch (InvalidDataException e)
         {
             return BadRequest(e.Message);
         }
     }
 
+
+    [HttpDelete("{consultantUsername}", Name = "DeleteConsultant")]
+    [Authorize(Roles = "Admin")]
+    public ActionResult DeleteConsultant(string consultantUsername)
+    {
+        try
+        {
+            _userService.DeleteConsultant(consultantUsername);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok($"{consultantUsername} has been deleted successfully from the database");
+    }
 }

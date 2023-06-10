@@ -9,4 +9,5 @@ public interface IMeetingRepository
     Task AddMeeting(Meeting meeting);
     void UpdateMeeting(Meeting meeting);
     bool DeleteMeeting(string id);
+    bool DeleteAllMeetingsOfUserId(string userId);
 }

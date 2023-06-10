@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
     [HttpPost("askForAccount", Name = "AskForAccount")]
     public ActionResult<RegistrationRequest> AskForAccount(RegistrationRequestDto request)
     {
-        var manager = _userService.GetUserByUserName(request.ManagerUsername);
+        var manager = _userService.GetUserByUsername(request.ManagerUsername);
         if (manager is null)
         {
             return BadRequest("The Manager username provided does not exist in our database.");
@@ -62,26 +62,25 @@ public class AuthController : ControllerBase
     {
         var registrationRequest = _registrationRequestService.GetRegistrationRequest(requestId);
 
-        if (registrationRequest != null)
+        if (registrationRequest == null)
         {
-            var user = _userService.CreateUserWithDefaultPassword(registrationRequest);
-
-            if (await _registrationRequestService.ApproveRegistrationRequest(requestId) != true)
-            {
-                return BadRequest("Failed to approve registration request.");
-            }
-
-            return Ok(user);
+            return BadRequest("The registration request was not found in the database.");
         }
-        return BadRequest("The registration request was not found in the database.");
+        var user = _userService.CreateUserWithDefaultPassword(registrationRequest);
+
+        if (await _registrationRequestService.ApproveRegistrationRequest(requestId) != true)
+        {
+            return BadRequest("Failed to approve registration request.");
+        }
+
+        return Ok(user);
     }
 
 
     [HttpPost("login", Name = "Login")]
     public ActionResult<string> Login(UserDto request)
     {
-        var user = _userService.GetUserByUserName(request.Username);
-
+        var user = _userService.GetUserByUsername(request.Username);
         if (user == null)
             return BadRequest("The user was not found");
 

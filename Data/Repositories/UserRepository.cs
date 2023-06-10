@@ -22,12 +22,12 @@ namespace backend.Data.Repositories
             return _users.Find(u => u.ManagerUsername == managerUsername && !u.IsAdmin).ToList();
         }
 
-        public User GetUserByUsername(string userName)
+        public User? GetUserByUsername(string userName)
         {
             return _users.Find(user => user.Username == userName).FirstOrDefault();
         }
 
-        public User GetUserById(string id)
+        public User? GetUserById(string id)
         {
             return _users.Find(user => user.Id == id).FirstOrDefault();
         }
@@ -48,9 +48,10 @@ namespace backend.Data.Repositories
             _users.ReplaceOne(u => u.Id == user.Id, user);
         }
 
-        public void DeleteUser(string id)
+        public bool DeleteUser(string id)
         {
-            _users.DeleteOne(user => user.Id == id);
+            var result = _users.DeleteOne(user => user.Id == id);
+            return result.DeletedCount > 0;
         }
     }
 }

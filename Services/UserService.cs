@@ -15,12 +15,14 @@ public class UserService : IUserService
     private readonly IConfiguration _configuration;
     private IHttpContextAccessor _contextAccessor;
     private IUserRepository _userRepository;
+    private IMeetingRepository _meetingRepository;
 
-    public UserService(IConfiguration configuration, IHttpContextAccessor contextAccessor, IUserRepository userRepository)
+    public UserService(IConfiguration configuration, IHttpContextAccessor contextAccessor, IUserRepository userRepository, IMeetingRepository meetingRepository)
     {
         _configuration = configuration;
         _contextAccessor = contextAccessor;
         _userRepository = userRepository;
+        _meetingRepository = meetingRepository;
     }
 
 
@@ -39,7 +41,7 @@ public class UserService : IUserService
     }
 
 
-    public User? GetUserByUserName(string userName)
+    public User? GetUserByUsername(string userName)
     {
         return _userRepository.GetUserByUsername(userName);
     }
@@ -132,6 +134,34 @@ public class UserService : IUserService
         user.PasswordHash = newPasswordHash;
         user.PasswordSalt = newPasswordSalt;
         _userRepository.UpdateUser(user);
+
+        return true;
+    }
+
+    public bool DeleteConsultant(string username)
+    {
+        var user = _userRepository.GetUserByUsername(username);
+        if (user == null)
+        {
+            throw new InvalidDataException("The current user is not present in the database.");
+        }
+        else if (user.IsAdmin == true)
+        {
+            throw new InvalidDataException("The user is an admin and cannot be deleted.");
+        }
+
+        var deletedMeetings = _meetingRepository.DeleteAllMeetingsOfUserId(user.Id);
+        if (deletedMeetings == false)
+        {
+            throw new InvalidDataException("The user's meetings cannot be deleted.");
+        }
+
+
+        var deleteUser = _userRepository.DeleteUser(user.Id);
+        if (!deleteUser)
+        {
+            throw new InvalidDataException("The delete operation failed.");
+        }
 
         return true;
     }
