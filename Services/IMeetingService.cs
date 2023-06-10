@@ -1,7 +1,7 @@
-﻿using backend.Models;
-using backend.Models.DTO;
+﻿using InvesTime.BackEnd.Models;
+using InvesTime.BackEnd.Models.DTO;
 
-namespace backend.Services;
+namespace InvesTime.BackEnd.Services;
 
 public interface IMeetingService
 {

@@ -1,9 +1,9 @@
-﻿using backend.Data.Repositories;
-using backend.Helpers;
-using backend.Models.DTO;
-using backend.Models;
+﻿using InvesTime.BackEnd.Data.Repositories;
+using InvesTime.BackEnd.Helpers;
+using InvesTime.BackEnd.Models;
+using InvesTime.BackEnd.Models.DTO;
 
-namespace backend.Services;
+namespace InvesTime.BackEnd.Services;
 
 public class ArticleFromManagerService : IArticleFromManagerService
 {

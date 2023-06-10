@@ -3,12 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using backend.Data.Repositories;
-using backend.Models;
-using backend.Models.DTO;
+using InvesTime.BackEnd.Data.Repositories;
+using InvesTime.BackEnd.Models;
+using InvesTime.BackEnd.Models.DTO;
 using Microsoft.IdentityModel.Tokens;
 
-namespace backend.Services;
+namespace InvesTime.BackEnd.Services;
 
 public class UserService : IUserService
 {
@@ -175,6 +175,6 @@ public class UserService : IUserService
     public IList<string> GetAllConsultantUsernamesUnderManager()
     {
         var managerUsername = GetCurrentUserUsername();
-        return _userRepository.GetAllConsultantUsernamesUnderManager(managerUsername).Select(u => u.Username).ToList();
+        return _userRepository.GetAllConsultantUsernamesUnderManager(managerUsername!).Select(u => u.Username).ToList();
     }
 }

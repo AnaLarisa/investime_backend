@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace backend.Helpers;
+namespace InvesTime.BackEnd.Helpers;
 
 public static class ObjectConverter
 {

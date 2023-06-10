@@ -1,9 +1,9 @@
-﻿using backend.Validators;
+﻿using System.ComponentModel.DataAnnotations;
+using InvesTime.BackEnd.Validators;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System.ComponentModel.DataAnnotations;
 
-namespace backend.Models;
+namespace InvesTime.BackEnd.Models;
 
 public class User
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using backend.Validators;
+using InvesTime.BackEnd.Validators;
 
-namespace backend.Models.DTO;
+namespace InvesTime.BackEnd.Models.DTO;
 
 public class RegistrationRequestDto
 {

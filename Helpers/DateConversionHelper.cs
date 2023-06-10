@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace backend.Helpers;
+namespace InvesTime.BackEnd.Helpers;
 
 public static class DateConversionHelper
 {

@@ -1,11 +1,9 @@
-﻿using backend.Helpers;
-using backend.Models;
-using backend.Models.DTO;
-using backend.Repositories;
-using Microsoft.AspNetCore.Identity;
-using MongoDB.Driver;
+﻿using InvesTime.BackEnd.Data.Repositories;
+using InvesTime.BackEnd.Helpers;
+using InvesTime.BackEnd.Models;
+using InvesTime.BackEnd.Models.DTO;
 
-namespace backend.Services;
+namespace InvesTime.BackEnd.Services;
 
 public class RegistrationRequestService : IRegistrationRequestService
 {

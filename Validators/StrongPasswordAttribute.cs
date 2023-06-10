@@ -1,14 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace backend.Validators;
+namespace InvesTime.BackEnd.Validators;
 
 public class StrongPasswordAttribute : ValidationAttribute
 {
     private new const string ErrorMessage = "The password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.";
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
+        if (value == null)
+        {
+            return new ValidationResult("The password provided is null.");
+        }
+
         if (value is string password && !IsStrongPassword(password))
         {
             return new ValidationResult(ErrorMessage);

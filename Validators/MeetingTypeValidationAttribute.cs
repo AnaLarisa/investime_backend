@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace backend.Validators;
+namespace InvesTime.BackEnd.Validators;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class MeetingTypeValidationAttribute : ValidationAttribute

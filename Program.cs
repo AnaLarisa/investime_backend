@@ -1,13 +1,12 @@
 using System.Text;
-using backend.Data.Repositories;
-using backend.Repositories;
-using backend.Services;
+using InvesTime.BackEnd.Data.Repositories;
+using InvesTime.BackEnd.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace backend;
+namespace InvesTime.BackEnd;
 
 public class Program
 {

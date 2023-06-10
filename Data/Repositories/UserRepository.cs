@@ -1,7 +1,7 @@
-﻿using backend.Models;
+﻿using InvesTime.BackEnd.Models;
 using MongoDB.Driver;
 
-namespace backend.Data.Repositories
+namespace InvesTime.BackEnd.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {

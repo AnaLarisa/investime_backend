@@ -1,6 +1,6 @@
-﻿using backend.Models;
+﻿using InvesTime.BackEnd.Models;
 
-namespace backend.Data.Repositories
+namespace InvesTime.BackEnd.Data.Repositories
 {
     public interface IUserRepository
     {

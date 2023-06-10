@@ -1,7 +1,6 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace backend.Models.DTO;
+namespace InvesTime.BackEnd.Models.DTO;
 
 public class UserDto
 {

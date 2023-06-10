@@ -1,11 +1,10 @@
-﻿using backend.Data.Repositories;
-using backend.Helpers;
-using backend.Models;
-using backend.Models.DTO;
+﻿using InvesTime.BackEnd.Data.Repositories;
+using InvesTime.BackEnd.Helpers;
+using InvesTime.BackEnd.Models;
+using InvesTime.BackEnd.Models.DTO;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
 
-namespace backend.Services;
+namespace InvesTime.BackEnd.Services;
 
 public class MeetingService : IMeetingService
 {

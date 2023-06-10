@@ -1,7 +1,7 @@
-﻿using backend.Validators;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using InvesTime.BackEnd.Validators;
 
-namespace backend.Models.DTO;
+namespace InvesTime.BackEnd.Models.DTO;
 
 public class MeetingDto
 {

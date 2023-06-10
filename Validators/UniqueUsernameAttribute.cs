@@ -1,21 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using backend.Services;
+using InvesTime.BackEnd.Services;
 
-namespace backend.Validators;
+namespace InvesTime.BackEnd.Validators;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class UniqueUsernameAttribute : ValidationAttribute
 {
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
+        if (value == null)
+        {
+            return new ValidationResult("The username provided is null.");
+        }
+
         var userService = (IUserService)validationContext.GetService(typeof(IUserService))!;
         var username = (string)value;
 
-        if (userService.IsUsernameTaken(username))
-        {
-            return new ValidationResult("Username already exists.");
-        }
-
-        return ValidationResult.Success!;
+        return userService.IsUsernameTaken(username) 
+            ? new ValidationResult("Username already exists.") 
+            : ValidationResult.Success!;
     }
 }

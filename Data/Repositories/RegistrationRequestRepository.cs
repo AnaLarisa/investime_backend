@@ -1,9 +1,7 @@
-﻿using backend.Models;
+﻿using InvesTime.BackEnd.Models;
 using MongoDB.Driver;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace backend.Repositories;
+namespace InvesTime.BackEnd.Data.Repositories;
 
 public class RegistrationRequestRepository : IRegistrationRequestRepository
 {

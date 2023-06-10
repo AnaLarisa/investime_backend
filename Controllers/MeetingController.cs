@@ -1,10 +1,10 @@
-﻿using backend.Models;
-using backend.Models.DTO;
-using backend.Services;
+﻿using InvesTime.BackEnd.Models;
+using InvesTime.BackEnd.Models.DTO;
+using InvesTime.BackEnd.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backend.Controllers;
+namespace InvesTime.BackEnd.Controllers;
 
 [Route("api/[controller]")]
 [ApiController, Authorize]

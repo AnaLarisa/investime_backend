@@ -1,10 +1,9 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
+using InvesTime.BackEnd.Validators;
 using MongoDB.Bson;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using backend.Validators;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace backend.Models;
+namespace InvesTime.BackEnd.Models;
 
 public class Meeting
 {

@@ -1,8 +1,8 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
-using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace backend.Models;
+namespace InvesTime.BackEnd.Models;
 
 public class ArticleFromManager
 {

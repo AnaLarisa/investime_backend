@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using backend.Validators;
-using MongoDB.Bson.Serialization.Attributes;
+using InvesTime.BackEnd.Validators;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace backend.Models;
+namespace InvesTime.BackEnd.Models;
 
 public class RegistrationRequest
 {

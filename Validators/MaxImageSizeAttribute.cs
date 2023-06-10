@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace backend.Validators;
+namespace InvesTime.BackEnd.Validators;
 
 public class MaxImageSizeAttribute : ValidationAttribute
 {
@@ -13,6 +13,11 @@ public class MaxImageSizeAttribute : ValidationAttribute
 
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
+        if (value is null)
+        {
+            return new ValidationResult("The image provided is null.");
+        }
+
         if (value is byte[] imageBytes && imageBytes.Length > _maxSizeInBytes)
         {
             return new ValidationResult($"Image size should not exceed {_maxSizeInBytes} bytes.");
