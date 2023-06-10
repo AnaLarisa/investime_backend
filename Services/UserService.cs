@@ -5,31 +5,39 @@ using System.Security.Cryptography;
 using System.Text;
 using backend.Data.Repositories;
 using backend.Models;
+using backend.Models.DTO;
 using Microsoft.IdentityModel.Tokens;
 
 namespace backend.Services;
 
-public class AuthService : IAuthService
+public class UserService : IUserService
 {
     private readonly IConfiguration _configuration;
     private IHttpContextAccessor _contextAccessor;
     private IUserRepository _userRepository;
 
-    public AuthService(IConfiguration configuration, IHttpContextAccessor contextAccessor, IUserRepository userRepository)
+    public UserService(IConfiguration configuration, IHttpContextAccessor contextAccessor, IUserRepository userRepository)
     {
         _configuration = configuration;
         _contextAccessor = contextAccessor;
         _userRepository = userRepository;
     }
 
+
     public string? GetCurrentUserId()
     {
         var httpContext = _contextAccessor.HttpContext;
-
         var claimsIdentity = httpContext?.User.Identity as ClaimsIdentity;
-
         return claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
+    
+    private string? GetCurrentUserUsername()
+    {
+        var httpContext = _contextAccessor.HttpContext;
+        var claimsIdentity = httpContext?.User.Identity as ClaimsIdentity;
+        return claimsIdentity?.FindFirst(ClaimTypes.Name)?.Value;
+    }
+
 
     public User? GetUserByUserName(string userName)
     {
@@ -95,6 +103,7 @@ public class AuthService : IAuthService
         }
     }
 
+
     public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
         using (var hmac = new HMACSHA512(passwordSalt))
@@ -104,13 +113,38 @@ public class AuthService : IAuthService
         }
     }
 
+
+    public bool ChangePassword(ChangePasswordDto changePasswordDto)
+    {
+        var user = _userRepository.GetUserById(GetCurrentUserId()!);
+        if (user == null)
+        {
+            throw new InvalidDataException("The current user is not present in the database.");
+        }
+
+        var isPasswordCorrect = VerifyPasswordHash(changePasswordDto.CurrentPassword, user.PasswordHash, user.PasswordSalt);
+        if (!isPasswordCorrect)
+        {
+            throw new InvalidDataException("Incorrect current password.");
+        }
+
+        CreatePasswordHash(changePasswordDto.NewPassword, out var newPasswordHash, out var newPasswordSalt);
+        user.PasswordHash = newPasswordHash;
+        user.PasswordSalt = newPasswordSalt;
+        _userRepository.UpdateUser(user);
+
+        return true;
+    }
+
+
     public bool IsUsernameTaken(string username)
     { 
         return _userRepository.ExistsByUsername(username);
     }
 
-    public IList<User> GetAllUsers()
-    { 
-        return _userRepository.GetAllUsers() ?? new List<User>();
+    public IList<string> GetAllConsultantUsernamesUnderManager()
+    {
+        var managerUsername = GetCurrentUserUsername();
+        return _userRepository.GetAllConsultantUsernamesUnderManager(managerUsername).Select(u => u.Username).ToList();
     }
 }

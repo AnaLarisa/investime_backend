@@ -17,9 +17,19 @@ namespace backend.Data.Repositories
             return _users.Find(_ => true).ToList();
         }
 
+        public IList<User> GetAllConsultantUsernamesUnderManager(string managerUsername)
+        {
+            return _users.Find(u => u.ManagerUsername == managerUsername && !u.IsAdmin).ToList();
+        }
+
         public User GetUserByUsername(string userName)
         {
             return _users.Find(user => user.Username == userName).FirstOrDefault();
+        }
+
+        public User GetUserById(string id)
+        {
+            return _users.Find(user => user.Id == id).FirstOrDefault();
         }
 
         public bool ExistsByUsername(string username)

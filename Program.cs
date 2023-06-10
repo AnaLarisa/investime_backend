@@ -40,7 +40,7 @@ public class Program
         builder.Services.AddScoped<IArticleFromManagerRepository, ArticleFromManagerRepository>();
 
         builder.Services.AddScoped<IMeetingService, MeetingService>();
-        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IRegistrationRequestService, RegistrationRequestService>();
         builder.Services.AddScoped<IArticleFromManagerService, ArticleFromManagerService>();
 

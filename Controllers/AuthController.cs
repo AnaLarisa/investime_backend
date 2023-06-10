@@ -11,20 +11,20 @@ namespace backend.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
-    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
     private readonly IRegistrationRequestService _registrationRequestService;
 
-    public AuthController(IConfiguration configuration, IAuthService authService, IRegistrationRequestService registrationRequestService)
+    public AuthController(IConfiguration configuration, IUserService userService, IRegistrationRequestService registrationRequestService)
     {
         _configuration = configuration;
-        _authService = authService;
+        _userService = userService;
         _registrationRequestService = registrationRequestService;
     }
 
     [HttpPost("askForAccount", Name = "AskForAccount")]
     public ActionResult<RegistrationRequest> AskForAccount(RegistrationRequestDto request)
     {
-        var manager = _authService.GetUserByUserName(request.ManagerUsername);
+        var manager = _userService.GetUserByUserName(request.ManagerUsername);
         if (manager is null)
         {
             return BadRequest("The Manager username provided does not exist in our database.");
@@ -64,7 +64,7 @@ public class AuthController : ControllerBase
 
         if (registrationRequest != null)
         {
-            var user = _authService.CreateUserWithDefaultPassword(registrationRequest);
+            var user = _userService.CreateUserWithDefaultPassword(registrationRequest);
 
             if (await _registrationRequestService.ApproveRegistrationRequest(requestId) != true)
             {
@@ -80,23 +80,16 @@ public class AuthController : ControllerBase
     [HttpPost("login", Name = "Login")]
     public ActionResult<string> Login(UserDto request)
     {
-        var user = _authService.GetUserByUserName(request.Username);
+        var user = _userService.GetUserByUserName(request.Username);
 
         if (user == null)
             return BadRequest("The user was not found");
 
-        if (!_authService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+        if (!_userService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             return BadRequest("Wrong password!");
 
-        var token = _authService.CreateToken(user);
+        var token = _userService.CreateToken(user);
 
         return Ok(token);
-    }
-
-    //to be modified in  GetAllConsultants
-    [HttpGet("/users", Name = "GetAllUsers")]
-    public ActionResult<IList<User>> GetAllUsers()
-    {
-        return Ok(_authService.GetAllUsers());
     }
 }
