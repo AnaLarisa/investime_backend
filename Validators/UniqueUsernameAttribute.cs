@@ -8,7 +8,7 @@ public class UniqueUsernameAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        var userService = (IAuthService)validationContext.GetService(typeof(IAuthService))!;
+        var userService = (IUserService)validationContext.GetService(typeof(IUserService))!;
         var username = (string)value;
 
         if (userService.IsUsernameTaken(username))

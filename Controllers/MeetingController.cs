@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers;
 
 [Route("api/[controller]")]
-[ApiController, Authorize(Roles = "User,Admin")]
+[ApiController, Authorize]
 public class MeetingController : Controller
 {
     private readonly IMeetingService _meetingService;
