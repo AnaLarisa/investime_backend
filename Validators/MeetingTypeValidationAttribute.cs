@@ -6,15 +6,18 @@ namespace backend.Validators;
 public class MeetingTypeValidationAttribute : ValidationAttribute
 {
     private static readonly List<string> ValidMeetingTypes = new()
-        {
-            "Discovery",
-            "InvestmentPlan",
-            "MutualCommitment",
-            "FollowUp45Day",
-            "RegularProgress",
-            "Seminar",
-            "Internal"
-        };
+    {
+        "Analysis",
+        "Consultation (C1)",
+        "Consultation (C2)",
+        "Service",
+        "Personal Meeting",
+        "Team Meeting",
+        "Tell party",
+        "Seminar",
+        "Training"
+    };
+
     public override bool IsValid(object? value)
     {
         if (value != null)
