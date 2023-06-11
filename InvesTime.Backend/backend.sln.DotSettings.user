@@ -1,7 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8bba1485_002D19da_002D4987_002D89fd_002Da869a6bb153f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestMethod1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;MSTest::FAFAFB02-DF5F-4301-8498-DECD228DD573::net7.0::InvesTime.Tests.UnitTest1.TestMethod1&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;MSTest::00DDC72B-59E5-4551-A7D9-DD3E713048B6::net7.0::InvesTime.Tests.UnitTest1&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Inves/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
