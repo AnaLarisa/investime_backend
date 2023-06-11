@@ -8,7 +8,7 @@ public interface IMeetingService
     IList<Meeting> GetMeetings();
     IList<Meeting> GetFirstThreeUpcomingMeetings();
     Meeting GetMeetingById(string id);
-    IList<Meeting> GetMeetingsOfCurrentUser();
+    Dictionary<string, IList<Meeting>> GetMeetingsOfUserIdSortedByType(string userId = "");
 
     IList<Meeting> GetMeetingsOfMeetingTypeByConsultantUsername(string consultantUsername, string meetingType,
         DateTime startDate, DateTime endDate);
