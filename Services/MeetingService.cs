@@ -22,12 +22,20 @@ public class MeetingService : IMeetingService
     }
 
 
-    public IEnumerable<Meeting> GetMeetings()
+    public IList<Meeting> GetMeetings()
     {
         var userId = _userHelper.GetCurrentUserId();
         return userId.IsNullOrEmpty() 
             ? new List<Meeting>() 
             : _repository.GetMeetingsByUserId(userId);
+    }
+
+    public IList<Meeting> GetFirstThreeUpcomingMeetings()
+    {
+        var userId = _userHelper.GetCurrentUserId();
+        return userId.IsNullOrEmpty()
+            ? new List<Meeting>()
+            : _repository.GetMeetingsByUserId(userId).Where(m => m.Date >= DateTime.Now).OrderBy(m => m.Date).Take(3).ToList();
     }
 
 

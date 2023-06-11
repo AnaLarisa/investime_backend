@@ -1,6 +1,11 @@
 # Investime_backend
-### This is a .Net7 API that serves as backend for the InvesTime project.
-<br><br>
+ This is a .Net7 API that serves as <u>backend</u> for <u>InvesTime</u> project. 
+In order to run it, open the project in a terminal and execute the following command:
+```
+dotnet run
+```
+
+<br>
 
 
 # Use Case Diagram

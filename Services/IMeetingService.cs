@@ -5,7 +5,8 @@ namespace InvesTime.BackEnd.Services;
 
 public interface IMeetingService
 {
-    IEnumerable<Meeting> GetMeetings();
+    IList<Meeting> GetMeetings();
+    IList<Meeting> GetFirstThreeUpcomingMeetings();
     Meeting GetMeetingById(string id);
     IList<Meeting> GetMeetingsOfCurrentUser();
     IList<Meeting> GetMeetingsOfMeetingTypeByConsultantUsername(string consultantUsername, string meetingType, DateTime startDate, DateTime endDate);

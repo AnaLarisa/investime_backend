@@ -25,6 +25,14 @@ public class MeetingController : Controller
     }
 
 
+    [HttpGet("upcoming3",Name = "GetFirstThreeUpcomingMeetings")]
+    public IActionResult GetFirstThreeUpcomingMeetings()
+    {
+        var meetings = _meetingService.GetFirstThreeUpcomingMeetings();
+        return Ok(meetings);
+    }
+
+
     [HttpGet("{id}", Name = "GetMeetingById")]
     public IActionResult GetMeetingById(string id)
     {
