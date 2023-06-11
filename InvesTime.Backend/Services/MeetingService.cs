@@ -91,11 +91,30 @@ public class MeetingService : IMeetingService
     }
 
 
-    public IList<Meeting> GetMeetingsOfCurrentUser()
+    public Dictionary<string, IList<Meeting>> GetMeetingsOfUserIdSortedByType(string userId = "")
     {
-        var userId = _userHelper.GetCurrentUserId();
-        return _repository.GetMeetingsByUserId(userId);
+        if (userId == "")
+        {
+            userId = _userHelper.GetCurrentUserId();
+        }
+
+        var userMeetings = _repository.GetMeetingsByUserId(userId);
+        var meetingsByType = new Dictionary<string, IList<Meeting>>();
+
+        foreach (var meeting in userMeetings)
+        {
+            if (!meetingsByType.ContainsKey(meeting.Type))
+            {
+                meetingsByType[meeting.Type] = new List<Meeting>();
+            }
+
+            meetingsByType[meeting.Type].Add(meeting);
+        }
+
+
+        return meetingsByType;
     }
+
 
     public IList<Meeting> GetMeetingsOfMeetingTypeByConsultantUsername(string consultantUsername, string meetingType,
         DateTime startDate, DateTime endDate)

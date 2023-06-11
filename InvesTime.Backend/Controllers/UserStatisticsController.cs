@@ -47,12 +47,12 @@ public class UserStatisticsController : ControllerBase
         }
     }
 
-    [HttpGet("meetings", Name = "GetMeetingsOfCurrentUser")]
-    public IActionResult GetMeetingsOfCurrentUser()
+    [HttpGet("meetingsByType", Name = "GetMeetingsOfUserIdSortedByType")]
+    public IActionResult GetMeetingsOfCurrentUserSortedByType()
     {
         try
         {
-            var meetings = _meetingService.GetMeetingsOfCurrentUser();
+            var meetings = _meetingService.GetMeetingsOfUserIdSortedByType();
             return Ok(meetings);
         }
         catch (Exception ex)
