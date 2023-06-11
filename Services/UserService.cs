@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using InvesTime.BackEnd.Data.Repositories;
+using InvesTime.BackEnd.Helpers;
 using InvesTime.BackEnd.Models;
 using InvesTime.BackEnd.Models.DTO;
 using Microsoft.IdentityModel.Tokens;
@@ -13,31 +14,16 @@ namespace InvesTime.BackEnd.Services;
 public class UserService : IUserService
 {
     private readonly IConfiguration _configuration;
-    private IHttpContextAccessor _contextAccessor;
-    private IUserRepository _userRepository;
-    private IMeetingRepository _meetingRepository;
+    private readonly IUserHelper _userHelper;
+    private readonly IUserRepository _userRepository;
+    private readonly IMeetingRepository _meetingRepository;
 
-    public UserService(IConfiguration configuration, IHttpContextAccessor contextAccessor, IUserRepository userRepository, IMeetingRepository meetingRepository)
+    public UserService(IConfiguration configuration, IUserHelper userHelper, IUserRepository userRepository, IMeetingRepository meetingRepository)
     {
         _configuration = configuration;
-        _contextAccessor = contextAccessor;
+        _userHelper = userHelper;
         _userRepository = userRepository;
         _meetingRepository = meetingRepository;
-    }
-
-
-    public string? GetCurrentUserId()
-    {
-        var httpContext = _contextAccessor.HttpContext;
-        var claimsIdentity = httpContext?.User.Identity as ClaimsIdentity;
-        return claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    }
-    
-    private string? GetCurrentUserUsername()
-    {
-        var httpContext = _contextAccessor.HttpContext;
-        var claimsIdentity = httpContext?.User.Identity as ClaimsIdentity;
-        return claimsIdentity?.FindFirst(ClaimTypes.Name)?.Value;
     }
 
 
@@ -46,6 +32,15 @@ public class UserService : IUserService
         return _userRepository.GetUserByUsername(userName);
     }
 
+    public string GetUserIdByUsername(string userName)
+    {
+        var user = _userRepository.GetUserByUsername(userName);
+        if (user == null)
+        {
+            throw new InvalidDataException("The current user is not present in the database.");
+        }
+        return user.Id;
+    }
 
     public User CreateUserWithDefaultPassword(RegistrationRequest registrationRequest)
     {
@@ -68,15 +63,14 @@ public class UserService : IUserService
 
     public string CreateToken(User user)
     {
-        List<Claim> claims = new List<Claim>
+        var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Username),
-            new(ClaimTypes.NameIdentifier, user.Id)
+            new(ClaimTypes.NameIdentifier, user.Id),
+            user.IsAdmin 
+                ? new Claim(ClaimTypes.Role, "Admin") 
+                : new Claim(ClaimTypes.Role, "User")
         };
-
-        claims.Add(user.IsAdmin 
-            ? new Claim(ClaimTypes.Role, "Admin") 
-            : new Claim(ClaimTypes.Role, "User"));
 
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
@@ -98,27 +92,23 @@ public class UserService : IUserService
 
     private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
-        using (var hmac = new HMACSHA512())
-        {
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
+        using var hmac = new HMACSHA512();
+        passwordSalt = hmac.Key;
+        passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
     }
 
 
     public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
-        using (var hmac = new HMACSHA512(passwordSalt))
-        {
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return StructuralComparisons.StructuralEqualityComparer.Equals(computedHash, passwordHash);
-        }
+        using var hmac = new HMACSHA512(passwordSalt);
+        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+        return StructuralComparisons.StructuralEqualityComparer.Equals(computedHash, passwordHash);
     }
 
 
     public bool ChangePassword(ChangePasswordDto changePasswordDto)
     {
-        var user = _userRepository.GetUserById(GetCurrentUserId()!);
+        var user = _userRepository.GetUserById(_userHelper.GetCurrentUserId());
         if (user == null)
         {
             throw new InvalidDataException("The current user is not present in the database.");
@@ -145,17 +135,12 @@ public class UserService : IUserService
         {
             throw new InvalidDataException("The current user is not present in the database.");
         }
-        else if (user.IsAdmin == true)
+        if (user.IsAdmin)
         {
             throw new InvalidDataException("The user is an admin and cannot be deleted.");
         }
 
-        var deletedMeetings = _meetingRepository.DeleteAllMeetingsOfUserId(user.Id);
-        if (deletedMeetings == false)
-        {
-            throw new InvalidDataException("The user's meetings cannot be deleted.");
-        }
-
+        DeleteAllMeetingsOfUserId(user.Id);
 
         var deleteUser = _userRepository.DeleteUser(user.Id);
         if (!deleteUser)
@@ -167,6 +152,17 @@ public class UserService : IUserService
     }
 
 
+
+    public void DeleteAllMeetingsOfUserId(string userId)
+    {
+        var deletedMeetings = _meetingRepository.DeleteAllMeetingsOfUserId(userId);
+        if (deletedMeetings == false)
+        {
+            throw new InvalidDataException("The user's meetings cannot be deleted.");
+        }
+    }
+
+
     public bool IsUsernameTaken(string username)
     { 
         return _userRepository.ExistsByUsername(username);
@@ -174,7 +170,7 @@ public class UserService : IUserService
 
     public IList<string> GetAllConsultantUsernamesUnderManager()
     {
-        var managerUsername = GetCurrentUserUsername();
-        return _userRepository.GetAllConsultantUsernamesUnderManager(managerUsername!).Select(u => u.Username).ToList();
+        var managerUsername = _userHelper.GetCurrentUserUsername();
+        return _userRepository.GetAllConsultantUsernamesUnderManager(managerUsername).Select(u => u.Username).ToList();
     }
 }
