@@ -28,12 +28,12 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 
 ### Meeting types:
 * Analysis,
-* Consultation (C1),
-* Consultation (C2),
+* Consultation(C1),
+* Consultation(C2),
 * Service,
-* Personal Meeting,
-* Team Meeting,
-* Tell party,
+* PersonalMeeting,
+* TeamMeeting,
+* TellParty,
 * Seminar
 * Training
 

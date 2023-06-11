@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace InvesTime.BackEnd.Helpers;
+﻿namespace InvesTime.BackEnd.Helpers;
 
 public static class ObjectConverter
 {
@@ -13,8 +11,8 @@ public static class ObjectConverter
         var sourceType = typeof(TSource);
         var targetType = typeof(TTarget);
 
-        PropertyInfo[] sourceProperties = sourceType.GetProperties();
-        PropertyInfo[] targetProperties = targetType.GetProperties();
+        var sourceProperties = sourceType.GetProperties();
+        var targetProperties = targetType.GetProperties();
 
         foreach (var sourceProperty in sourceProperties)
         {

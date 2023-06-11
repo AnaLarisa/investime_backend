@@ -46,4 +46,18 @@ public class MeetingRepository : IMeetingRepository
         var result = _meetings.DeleteMany(m => m.UserId == userId);
         return result.DeletedCount > 0;
     }
+
+    public IList<Meeting> GetMeetingsByUserId(string userId)
+    {
+        return _meetings.Find(m => m.UserId == userId).ToList();
+    }
+
+    public IList<Meeting> GetMeetingsByConsultantId(string consultantId, string meetingType, DateTime startDate, DateTime endDate)
+    {
+        var result = _meetings.Find(meeting => meeting.UserId == consultantId &&
+                                               meeting.Type == meetingType &&
+                                               meeting.Date >= startDate &&
+                                               meeting.Date <= endDate).ToList();
+        return result ?? new List<Meeting>();
+    }
 }

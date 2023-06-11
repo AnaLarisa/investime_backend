@@ -1,5 +1,6 @@
 using System.Text;
 using InvesTime.BackEnd.Data.Repositories;
+using InvesTime.BackEnd.Helpers;
 using InvesTime.BackEnd.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -37,11 +38,16 @@ public class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IRegistrationRequestRepository, RegistrationRequestRepository>();
         builder.Services.AddScoped<IArticleFromManagerRepository, ArticleFromManagerRepository>();
+        builder.Services.AddScoped<IUserStatisticsRepository, UserStatisticsRepository>();
+
 
         builder.Services.AddScoped<IMeetingService, MeetingService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IRegistrationRequestService, RegistrationRequestService>();
         builder.Services.AddScoped<IArticleFromManagerService, ArticleFromManagerService>();
+        builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
+
+        builder.Services.AddScoped<IUserHelper, UserHelper>();
 
         builder.Services.AddHttpContextAccessor();
 

@@ -38,10 +38,10 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpGet("registration-requests/{managerUsername}", Name = "GetRegistrationRequestsByManager"), Authorize(Roles = "Admin")]
-    public async Task<ActionResult<IList<RegistrationRequest>>> GetRegistrationRequestsByManager(string managerUsername)
+    [HttpGet("registration-requests", Name = "GetRegistrationRequestsByManager"), Authorize(Roles = "Admin")]
+    public async Task<ActionResult<IList<RegistrationRequest>>> GetRegistrationRequestsByManager()
     {
-        var requests = await _registrationRequestService.GetRegistrationRequestsByManagerName(managerUsername);
+        var requests = await _registrationRequestService.GetRegistrationRequestsByManagerName();
 
         return Ok(requests);
     }

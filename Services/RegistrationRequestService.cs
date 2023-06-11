@@ -8,14 +8,17 @@ namespace InvesTime.BackEnd.Services;
 public class RegistrationRequestService : IRegistrationRequestService
 {
     private readonly IRegistrationRequestRepository _registrationRequestRepository;
+    private readonly IUserHelper _userHelper;
 
-    public RegistrationRequestService(IRegistrationRequestRepository registrationRequestRepository)
+    public RegistrationRequestService(IRegistrationRequestRepository registrationRequestRepository, IUserHelper userHelper)
     {
         _registrationRequestRepository = registrationRequestRepository;
+        _userHelper = userHelper;
     }
 
-    public Task<IList<RegistrationRequest>> GetRegistrationRequestsByManagerName(string managerUsername)
+    public Task<IList<RegistrationRequest>> GetRegistrationRequestsByManagerName()
     {
+        var managerUsername = _userHelper.GetCurrentUserUsername();
         return _registrationRequestRepository.GetRegistrationRequestsByManagerName(managerUsername);
     }
 

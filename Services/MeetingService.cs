@@ -10,17 +10,26 @@ public class MeetingService : IMeetingService
 {
     private readonly IMeetingRepository _repository;
     private IUserService _userService;
+    private readonly IUserHelper _userHelper;
+    private IUserStatisticsService _userStatisticsService;
 
-    public MeetingService(IMeetingRepository repository, IUserService userService)
+    public MeetingService(IMeetingRepository repository, IUserService userService, IUserHelper userHelper, IUserStatisticsService userStatisticsService)
     {
         _repository = repository;
         _userService = userService;
+        _userHelper  = userHelper;
+        _userStatisticsService = userStatisticsService;
     }
+
 
     public IEnumerable<Meeting> GetMeetings()
     {
-        return _repository.GetMeetings();
+        var userId = _userHelper.GetCurrentUserId();
+        return userId.IsNullOrEmpty() 
+            ? new List<Meeting>() 
+            : _repository.GetMeetingsByUserId(userId);
     }
+
 
     public Meeting GetMeetingById(string id)
     {
@@ -36,14 +45,21 @@ public class MeetingService : IMeetingService
             : result;
     }
 
+
     public async Task<Meeting> AddMeeting(MeetingDto meetingDto)
     {
         var meeting = ObjectConverter.Convert<MeetingDto, Meeting>(meetingDto);
-        meeting.UserId = _userService.GetCurrentUserId()!;
+        meeting.UserId = _userHelper.GetCurrentUserId();
         await _repository.AddMeeting(meeting);
+
+        if (meeting.Type == "Consultation(C2)")
+        {
+            _userStatisticsService.IncreaseNrOfClientsPerYear();
+        }
 
         return meeting;
     }
+
 
     public void UpdateMeeting(string id, MeetingDto meetingDto)
     {
@@ -54,6 +70,7 @@ public class MeetingService : IMeetingService
 
         _repository.UpdateMeeting(updatedMeeting);
     }
+
 
     public bool DeleteMeeting(string id)
     {
@@ -69,5 +86,23 @@ public class MeetingService : IMeetingService
         }
 
         return true;
+    }
+
+
+    public IList<Meeting> GetMeetingsOfCurrentUser()
+    {
+        var userId = _userHelper.GetCurrentUserId();
+        return _repository.GetMeetingsByUserId(userId);
+    }
+
+    public IList<Meeting> GetMeetingsOfMeetingTypeByConsultantUsername(string consultantUsername, string meetingType, DateTime startDate, DateTime endDate)
+    {
+        if (consultantUsername.IsNullOrEmpty())
+        {
+            throw new ArgumentException("Consultant username is required.");
+        }
+        var consultantId = _userService.GetUserIdByUsername(consultantUsername);
+
+        return _repository.GetMeetingsByConsultantId(consultantId, meetingType, startDate, endDate);
     }
 }
