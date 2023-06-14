@@ -22,6 +22,11 @@ public class AuthController : ControllerBase
         _registrationRequestService = registrationRequestService;
     }
 
+
+    /// <summary>
+    /// Ask for an new consultant account.
+    /// </summary>
+    /// <param name="request"></param>
     [HttpPost("askForAccount", Name = "AskForAccount")]
     public ActionResult<RegistrationRequest> AskForAccount(RegistrationRequestDto request)
     {
@@ -36,6 +41,9 @@ public class AuthController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Get all the registration requests the logged in manager has on his name.
+    /// </summary>
     [HttpGet("registration-requests", Name = "GetRegistrationRequestsByManager")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<IList<RegistrationRequest>>> GetRegistrationRequestsByManager()
@@ -46,17 +54,10 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpDelete("registration-requests/{requestId}/delete", Name = "RejectRegistrationRequest")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<bool>> RejectRegistrationRequest(string requestId)
-    {
-        var result = await _registrationRequestService.DeleteRegistrationRequest(requestId);
-        if (result == false) return BadRequest("The registration request was not found in the database.");
-
-        return Ok("The registration request has been successfully deleted.");
-    }
-
-
+    /// <summary>
+    /// Approve one registration request.
+    /// </summary>
+    /// <param name="requestId"></param>
     [HttpPost("registration-requests/{requestId}/approve", Name = "ApproveRegistrationRequest")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<User>> ApproveRegistrationRequest(string requestId)
@@ -73,6 +74,25 @@ public class AuthController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Reject one registration request.
+    /// </summary>
+    /// <param name="requestId"></param>
+    [HttpDelete("registration-requests/{requestId}/delete", Name = "RejectRegistrationRequest")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<bool>> RejectRegistrationRequest(string requestId)
+    {
+        var result = await _registrationRequestService.DeleteRegistrationRequest(requestId);
+        if (result == false) return BadRequest("The registration request was not found in the database.");
+
+        return Ok("The registration request has been successfully deleted.");
+    }
+
+
+    /// <summary>
+    /// Login with username and password.
+    /// </summary>
+    /// <param name="request"></param>
     [HttpPost("login", Name = "Login")]
     public ActionResult<string> Login(UserDto request)
     {

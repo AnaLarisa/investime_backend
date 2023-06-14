@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using InvesTime.BackEnd.Data.Repositories;
 using InvesTime.BackEnd.Helpers;
@@ -63,6 +64,9 @@ public class Program
                 Type = SecuritySchemeType.ApiKey
             });
             options.OperationFilter<SecurityRequirementsOperationFilter>();
+            // using System.Reflection;
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         });
 
 
