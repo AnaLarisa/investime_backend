@@ -17,6 +17,9 @@ public class ArticleFromManagerController : Controller
         _articleFromManagerService = articleFromManagerService;
     }
 
+    /// <summary>
+    /// Gets a list of all the articles posted by the manager.
+    /// </summary>
     [HttpGet(Name = "GetAllArticles")]
     public IActionResult GetAllArticles()
     {
@@ -24,6 +27,11 @@ public class ArticleFromManagerController : Controller
         return Ok(articles);
     }
 
+
+    /// <summary>
+    /// Gets an article by its Id in the database.
+    /// </summary>
+    /// <param name="id"></param>
     [HttpGet("{id}", Name = "GetArticleById")]
     public IActionResult GetArticleById(string id)
     {
@@ -32,6 +40,23 @@ public class ArticleFromManagerController : Controller
         return Ok(article);
     }
 
+
+    /// <summary>
+    /// Search through articles by title.
+    /// </summary>
+    /// <param name="title"></param>
+    [HttpGet("search", Name = "SearchArticles")]
+    public IActionResult SearchArticles([FromQuery] string title)
+    {
+        var articles = _articleFromManagerService.SearchArticles(title);
+        return Ok(articles);
+    }
+
+
+    /// <summary>
+    /// Admin - add a new article to the database
+    /// </summary>
+    /// <param name="articleDto"></param>
     [HttpPost(Name = "AddArticle")]
     [Authorize(Roles = "Admin")]
     public IActionResult AddArticle(ArticleFromManagerDto articleDto)
@@ -43,6 +68,11 @@ public class ArticleFromManagerController : Controller
         return Ok(article);
     }
 
+
+    /// <summary>
+    /// Admin - Delete one article.
+    /// </summary>
+    /// <param name="id"></param>
     [HttpDelete("{id}", Name = "DeleteArticle")]
     [Authorize(Roles = "Admin")]
     public IActionResult DeleteArticle(string id)
@@ -51,12 +81,5 @@ public class ArticleFromManagerController : Controller
         if (result == false) return BadRequest($"Deletion operation failed for article with id: {id}");
 
         return Ok($"Deleted article with id = {id}");
-    }
-
-    [HttpGet("search", Name = "SearchArticles")]
-    public IActionResult SearchArticles([FromQuery] string title)
-    {
-        var articles = _articleFromManagerService.SearchArticles(title);
-        return Ok(articles);
     }
 }

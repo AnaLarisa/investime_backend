@@ -18,6 +18,10 @@ public class MeetingController : Controller
         _meetingService = meetingService;
     }
 
+
+    /// <summary>
+    /// Get a list of all the meetings the current user has.
+    /// </summary>
     [HttpGet(Name = "GetAllMeetings")]
     public IActionResult GetAllMeetings()
     {
@@ -26,6 +30,9 @@ public class MeetingController : Controller
     }
 
 
+    /// <summary>
+    /// Get the first 3 upcoming meetings of the current user.
+    /// </summary>
     [HttpGet("upcoming3", Name = "GetFirstThreeUpcomingMeetings")]
     public IActionResult GetFirstThreeUpcomingMeetings()
     {
@@ -34,6 +41,9 @@ public class MeetingController : Controller
     }
 
 
+    /// <summary>
+    /// Get one meeting by its id.
+    /// </summary>
     [HttpGet("{id}", Name = "GetMeetingById")]
     public IActionResult GetMeetingById(string id)
     {
@@ -42,6 +52,10 @@ public class MeetingController : Controller
     }
 
 
+    /// <summary>
+    /// Add a new meeting in the personal calendar.
+    /// </summary>
+    /// <param name="meetingDto"></param>
     [HttpPost(Name = "AddMeeting")]
     public async Task<ActionResult<Meeting>> AddMeeting(MeetingDto meetingDto)
     {
@@ -52,6 +66,11 @@ public class MeetingController : Controller
     }
 
 
+    /// <summary>
+    /// Update one meeting by Id.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="updatedMeetingDto"></param>
     [HttpPut("{id}", Name = "UpdateMeeting")]
     public IActionResult UpdateMeeting(string id, [FromBody] MeetingDto updatedMeetingDto)
     {
@@ -62,6 +81,11 @@ public class MeetingController : Controller
         return Ok($"Updated meeting with Id:\n{id}");
     }
 
+
+    /// <summary>
+    /// Delete one meeting by Id.
+    /// </summary>
+    /// <param name="id"></param>
     [HttpDelete("{id}", Name = "RemoveMeeting")]
     public IActionResult RemoveMeeting(string id)
     {

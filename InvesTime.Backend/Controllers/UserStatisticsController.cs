@@ -19,6 +19,11 @@ public class UserStatisticsController : ControllerBase
         _meetingService = meetingService;
     }
 
+
+    /// <summary>
+    /// Sets the personal targeted number of clients/current year
+    /// </summary>
+    /// <param name="targetNrOfClientsPerYear"></param>
     [HttpPost("target", Name = "SetTargetNrOfClientsPerYear")]
     public IActionResult SetTargetNrOfClientsPerYear(int targetNrOfClientsPerYear)
     {
@@ -33,6 +38,10 @@ public class UserStatisticsController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Get the targeted nr of clients + nr of clients until now for current user.
+    /// </summary>
     [HttpGet("target", Name = "GetTargetNrOfClientsPerYear")]
     public IActionResult GetTargetNrOfClientsPerYear()
     {
@@ -47,6 +56,10 @@ public class UserStatisticsController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Get all the meetings of current user sorted by Type (to be continued with date range filter)
+    /// </summary>
     [HttpGet("meetingsByType", Name = "GetMeetingsOfUserIdSortedByType")]
     public IActionResult GetMeetingsOfCurrentUserSortedByType()
     {
@@ -61,6 +74,10 @@ public class UserStatisticsController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Admin: Get all consultant's statistics (target + nr of clients until now)
+    /// </summary>
     [HttpGet("consultant/all", Name = "GetUserStatisticsForAdmin")]
     [Authorize(Roles = "Admin")]
     public IActionResult GetUserStatisticsForAdmin()
@@ -76,6 +93,14 @@ public class UserStatisticsController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Admin: Get all meetings of a type for a selected consultant username.
+    /// </summary>
+    /// <param name="consultantUsername"></param>
+    /// <param name="meetingType"></param>
+    /// <param name="startDay"></param>
+    /// <param name="endDay"></param>
     [HttpGet("consultant/{consultantUsername}/meetings", Name = "GetMeetingsOfMeetingTypeByConsultantUsername")]
     [Authorize(Roles = "Admin")]
     public IActionResult GetMeetingsOfMeetingTypeByConsultantUsername(string consultantUsername, string meetingType,

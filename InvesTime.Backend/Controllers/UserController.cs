@@ -16,6 +16,10 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+
+    /// <summary>
+    /// Admin: Get a list of all the consultants the logged in manager has.
+    /// </summary>
     [HttpGet("/my/consultants/", Name = "GetAllConsultantUsernamesUnderManager")]
     [Authorize(Roles = "Admin")]
     public ActionResult<IList<string>> GetAllConsultantUsernamesUnderManager()
@@ -23,6 +27,11 @@ public class UserController : ControllerBase
         return Ok(_userService.GetAllConsultantUsernamesUnderManager());
     }
 
+
+    /// <summary>
+    /// Change the password of the current user.
+    /// </summary>
+    /// <param name="changePasswordDto"></param>
     [HttpPut("changePassword", Name = "ChangePassword")]
     [Authorize]
     public ActionResult ChangePassword(ChangePasswordDto changePasswordDto)
@@ -44,6 +53,10 @@ public class UserController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Admin: Delete a consultant from the database (along with its meetings).
+    /// </summary>
+    /// <param name="consultantUsername"></param>
     [HttpDelete("{consultantUsername}", Name = "DeleteConsultant")]
     [Authorize(Roles = "Admin")]
     public ActionResult DeleteConsultant(string consultantUsername)
