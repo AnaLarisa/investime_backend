@@ -1,4 +1,5 @@
-﻿using InvesTime.BackEnd.Models;
+﻿using InvesTime.BackEnd.Helpers;
+using InvesTime.BackEnd.Models;
 using MongoDB.Bson.IO;
 using System.Text.Json;
 
@@ -19,22 +20,44 @@ public class NewsApiRepository : INewsApiRepository
 
     public async Task<List<NewsModel>> GetTopBusinessHeadlines()
     {
-        var requestUrl = $"{_apiUrl}?country=ro&category=business&apiKey={_apiKey}";
+        var requestUrl = $"{_apiUrl}?country=us&category=business&apiKey={_apiKey}";
 
         try
         {
-            var response = await _httpClient.GetAsync(requestUrl);
-            response.EnsureSuccessStatusCode();
-            string responseContent = await response.Content.ReadAsStringAsync();
-            var newsResponse = JsonSerializer.Deserialize<NewsResponseModel>(responseContent);
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            request.Headers.Add("User-Agent", "invesTime");
 
-            return newsResponse?.Articles?.Select(a => new NewsModel
+            var response = await _httpClient.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            var responseObject = JsonSerializer.Deserialize<JsonElement>(responseContent);
+
+            if (responseObject.TryGetProperty("articles", out var articlesElement) && articlesElement.ValueKind == JsonValueKind.Array)
             {
-                Title = a.Title,
-                Author = a.Author,
-                Url = a.Url,
-                UrlToImage = a.UrlToImage
-            }).ToList() ?? new List<NewsModel>();
+                var newsList = new List<NewsModel>();
+
+                foreach (var article in articlesElement.EnumerateArray())
+                {
+                    var newsModel = new NewsModel
+                    {
+                        Title = JsonHelper.GetStringOrDefault(article, "title"),
+                        Author = JsonHelper.GetStringOrDefault(article, "author"),
+                        Url = JsonHelper.GetStringOrDefault(article, "url"),
+                        UrlToImage = JsonHelper.GetStringOrDefault(article, "urlToImage")
+                    };
+
+                    newsList.Add(newsModel);
+                }
+
+                return newsList;
+            }
+            else
+            {
+                Console.WriteLine("News API response does not contain valid article data.");
+                return new List<NewsModel>();
+            }
         }
         catch (HttpRequestException ex)
         {
@@ -42,4 +65,5 @@ public class NewsApiRepository : INewsApiRepository
             return new List<NewsModel>();
         }
     }
+
 }

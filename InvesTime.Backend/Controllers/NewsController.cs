@@ -1,11 +1,13 @@
 ﻿using InvesTime.BackEnd.Models;
 using InvesTime.BackEnd.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InvesTime.BackEnd.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class NewsController : ControllerBase
 {
     private readonly INewsService _newsService;
@@ -15,6 +17,10 @@ public class NewsController : ControllerBase
         _newsService = newsService;
     }
 
+
+    /// <summary>
+    /// Gets the top business headlines
+    /// </summary>
     [HttpGet("business")]
     public async Task<ActionResult<List<NewsModel>>> GetTopBusinessHeadlines()
     {
