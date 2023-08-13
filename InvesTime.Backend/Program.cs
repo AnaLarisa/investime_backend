@@ -39,6 +39,7 @@ public class Program
         builder.Services.AddScoped<IRegistrationRequestRepository, RegistrationRequestRepository>();
         builder.Services.AddScoped<IArticleFromManagerRepository, ArticleFromManagerRepository>();
         builder.Services.AddScoped<IUserStatisticsRepository, UserStatisticsRepository>();
+        builder.Services.AddScoped<INewsApiRepository>(_ => new NewsApiRepository(config));
 
 
         builder.Services.AddScoped<IMeetingService, MeetingService>();
@@ -46,6 +47,7 @@ public class Program
         builder.Services.AddScoped<IRegistrationRequestService, RegistrationRequestService>();
         builder.Services.AddScoped<IArticleFromManagerService, ArticleFromManagerService>();
         builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
+        builder.Services.AddScoped<INewsService, NewsService>();
 
         builder.Services.AddScoped<IUserHelper, UserHelper>();
 

@@ -9,7 +9,7 @@ dotnet run
 
 
 # Use Case Diagram
-![UseCase Diagram](assets/InvesTime.png "UseCase Diagram")
+![UseCase Diagram](InvesTime.Backend/assets/InvesTime.png "UseCase Diagram")
 
 <br>
 
