@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InvesTime.Backend\InvesTime.BackEnd.csproj" />
+    <ProjectReference Include="..\InvesTime.Backend\InvesTime.csproj" />
   </ItemGroup>
 
 </Project>
