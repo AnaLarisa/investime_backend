@@ -14,8 +14,8 @@ public class NewsApiRepository : INewsApiRepository
     public NewsApiRepository(IConfiguration configuration)
     {
         _httpClient = new HttpClient();
-        _apiUrl = configuration["NewsApi:Url"]!;
-        _apiKey = configuration["NewsApi:ApiKey"]!;
+        _apiUrl = Environment.GetEnvironmentVariable("NewsApiUrl")!;
+        _apiKey = Environment.GetEnvironmentVariable("NewsApiKey")!;
     }
 
     public async Task<List<NewsModel>> GetTopBusinessHeadlines()

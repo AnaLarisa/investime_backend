@@ -22,9 +22,8 @@ public class Program
             .AddJsonFile("appsettings.json", true, true)
             .Build();
 
-
-        var connectionString = config.GetConnectionString("MongoDb")!;
-        var databaseName = config.GetValue<string>("MongoDb:DatabaseName");
+        var connectionString = Environment.GetEnvironmentVariable("MongoDb")!;
+        var databaseName = Environment.GetEnvironmentVariable("MongoDbDatabaseName");
 
         builder.Services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
         builder.Services.AddScoped<IMongoDatabase>(sp =>
