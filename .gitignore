@@ -5,3 +5,5 @@
 /obj
 /bin
 /.vs
+/InvesTime.Backend/InvesTime.csproj.user
+/InvesTime.Backend/InvesTime.sln.DotSettings.user
