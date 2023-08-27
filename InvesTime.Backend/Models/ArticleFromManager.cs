@@ -12,7 +12,7 @@ public class ArticleFromManager
 
     [Required] public string Title { get; set; } = "New article";
 
-    [Required]
+    [Required] public string Content { get; set; }
 
     public string Observations { get; set; } = string.Empty;
 }
