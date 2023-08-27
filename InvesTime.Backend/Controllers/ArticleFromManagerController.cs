@@ -49,6 +49,9 @@ public class ArticleFromManagerController : Controller
     public IActionResult SearchArticles([FromQuery] string title)
     {
         var articles = _articleFromManagerService.SearchArticles(title);
+        if (articles is null) 
+            return BadRequest($"No articles found with title = {title}");
+
         return Ok(articles);
     }
 
@@ -78,7 +81,8 @@ public class ArticleFromManagerController : Controller
     public IActionResult DeleteArticle(string id)
     {
         var result = _articleFromManagerService.DeleteArticle(id);
-        if (result == false) return BadRequest($"Deletion operation failed for article with id: {id}");
+        if (result == false) 
+            return BadRequest($"Deletion operation failed for article with id: {id}");
 
         return Ok($"Deleted article with id = {id}");
     }
