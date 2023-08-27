@@ -2,7 +2,7 @@
   "dependencies": {
     "cosmosdb1": {
       "type": "cosmosdb",
-      "connectionId": "ConnectionString:MongoDb"
+      "connectionId": "ConnectionString__MongoDb"
     }
   }
 }
