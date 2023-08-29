@@ -42,7 +42,7 @@ public class UserStatisticsController : ControllerBase
 
 
     /// <summary>
-    /// Get all the meetings of current user sorted by Type (to be continued with date range filter)
+    /// Get personal full statistics between start and end date
     /// </summary>
     [HttpGet("fullStatistics", Name = "GetFullPersonalStatistics")]
     public ActionResult<UserStatisticsDateRangeDto> GetFullStatisticsDateRange(
@@ -72,7 +72,7 @@ public class UserStatisticsController : ControllerBase
 
 
     /// <summary>
-    /// Admin: Get a consultant's full statistics
+    /// Get a consultant's full statistics between start and end date by username
     /// </summary>
     [HttpGet("fullStatistics/{username}", Name = "GetFullUserStatisticsForUsername")]
     public IActionResult GetFullUserStatisticsForUsername(string username, 

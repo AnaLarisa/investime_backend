@@ -86,7 +86,7 @@ public class UserStatisticsService : IUserStatisticsService
         {
             var newUserStatistics = new UserStatistics
             {
-                ConsultantUsername = username
+                Username = username
             };
             _userStatisticsRepository.AddUserStatistics(newUserStatistics);
             return newUserStatistics;

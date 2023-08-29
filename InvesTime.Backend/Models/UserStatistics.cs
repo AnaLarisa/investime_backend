@@ -9,7 +9,7 @@ public class UserStatistics
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
-    [Required] public string ConsultantUsername { get; set; } = string.Empty;
+    [Required] public string Username { get; set; } = string.Empty;
     public int TargetNrOfClientsPerYear { get; set; } = 0;
     public int ContractsSigned { get; set; } = 0;
     public int ClientsCount { get; set; } = 0;

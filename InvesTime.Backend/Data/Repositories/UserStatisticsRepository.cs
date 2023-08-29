@@ -14,7 +14,7 @@ public class UserStatisticsRepository : IUserStatisticsRepository
 
     public UserStatistics? GetUserStatisticsByUsername(string username)
     {
-        var filter = Builders<UserStatistics>.Filter.Eq(u => u.ConsultantUsername, username);
+        var filter = Builders<UserStatistics>.Filter.Eq(u => u.Username, username);
         return _userStatisticsCollection!.Find(filter).FirstOrDefault();
     }
 
