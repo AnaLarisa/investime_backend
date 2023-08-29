@@ -1,4 +1,5 @@
 ﻿using InvesTime.BackEnd.Models;
+using InvesTime.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -11,11 +12,6 @@ public class MeetingRepository : IMeetingRepository
     public MeetingRepository(IMongoDatabase database)
     {
         _meetings = database.GetCollection<Meeting>("meetings");
-    }
-
-    public IEnumerable<Meeting> GetMeetings()
-    {
-        return _meetings.Find(meeting => true).ToList();
     }
 
     public Meeting GetMeetingById(string id)
@@ -52,13 +48,27 @@ public class MeetingRepository : IMeetingRepository
         return _meetings.Find(m => m.UserId == userId).ToList();
     }
 
-    public IList<Meeting> GetMeetingsByConsultantId(string consultantId, string meetingType, DateTime startDate,
-        DateTime endDate)
+    public IList<Dictionary<string, int>> GetMeetingsCountByUserIdDateRange(DateTime startDate, DateTime endDate, string userId)
     {
-        var result = _meetings.Find(meeting => meeting.UserId == consultantId &&
-                                               meeting.Type == meetingType &&
-                                               meeting.Date >= startDate &&
-                                               meeting.Date <= endDate).ToList();
-        return result ?? new List<Meeting>();
+        var filter = Builders<Meeting>.Filter.And(
+            Builders<Meeting>.Filter.Eq(m => m.UserId, userId),
+            Builders<Meeting>.Filter.Gte(m => m.Date, startDate),
+            Builders<Meeting>.Filter.Lte(m => m.Date, endDate)
+        );
+
+        var meetingsList = _meetings.Find(filter).ToList();
+
+        var result = new Dictionary<string, int>();
+
+        foreach (MeetingType mt in Enum.GetValues(typeof(MeetingType)))
+        {
+            var meetingType = mt.ToString();
+            var count = meetingsList.Count(m => m.Type == meetingType);
+            result[meetingType] = count;
+        }
+
+        var resultList = result.Select(kv => new Dictionary<string, int> { { kv.Key, kv.Value } }).ToList();
+
+        return resultList;
     }
 }

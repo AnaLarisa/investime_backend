@@ -1,15 +1,17 @@
 ﻿using InvesTime.BackEnd.Models;
+using InvesTime.Models.DTO;
 
 namespace InvesTime.BackEnd.Services;
 
 public interface IUserStatisticsService
 {
-    Dictionary<string, Tuple<int, int>> GetAllUserStatistics();
-
-    Dictionary<DateTime, int> GetMeetingCountByDay(string userId, string meetingType, DateTime startDate,
-        DateTime endDate);
-
-    UserStatistics? GetUserStatistics(string userId = "");
+    IList<string> GetGoalsListsForCurrentUser();
+    void AddGoalToList(string goal);
+    void RemoveGoalFromList(string goal);
     void SetTargetNrOfClientsPerYear(int targetNrOfClients);
-    void IncreaseNrOfClientsPerYear();
+    void IncreaseNrOfContractsSignedPerYear();
+    void DecreaseNrOfContractsSignedPerYear();
+    public void IncreaseNrOfClientsCount();
+    UserStatisticsDateRangeDto GetUserStatisticsDateRangeDto(DateTime startDate, DateTime endDate, string username = "");
+
 }

@@ -1,6 +1,7 @@
 ﻿using InvesTime.BackEnd.Models;
 using InvesTime.BackEnd.Models.DTO;
 using InvesTime.BackEnd.Services;
+using InvesTime.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -94,7 +95,7 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <param name="request"></param>
     [HttpPost("login", Name = "Login")]
-    public ActionResult<string> Login(UserDto request)
+    public ActionResult<UserInfoDto> Login(UserDto request)
     {
         var user = _userService.GetUserByUsername(request.Username);
         if (user == null)
@@ -105,6 +106,6 @@ public class AuthController : ControllerBase
 
         var token = _userService.CreateToken(user);
 
-        return Ok(token);
+        return _userService.GetUserInformation(user, token);
     }
 }
