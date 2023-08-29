@@ -7,6 +7,7 @@ using InvesTime.BackEnd.Data.Repositories;
 using InvesTime.BackEnd.Helpers;
 using InvesTime.BackEnd.Models;
 using InvesTime.BackEnd.Models.DTO;
+using InvesTime.Models.DTO;
 using Microsoft.IdentityModel.Tokens;
 
 namespace InvesTime.BackEnd.Services;
@@ -86,7 +87,7 @@ public class UserService : IUserService
 
         return jwt;
     }
-
+    
 
     public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
@@ -152,5 +153,25 @@ public class UserService : IUserService
         using var hmac = new HMACSHA512();
         passwordSalt = hmac.Key;
         passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+    }
+
+    public UserInfoDto GetUserInformation(User user, string token)
+    {
+        return new UserInfoDto
+        {
+            Id = user.Id,
+            AuthorizationToken = token,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Username = user.Username,
+            IsAdmin = user.IsAdmin,
+            ManagerUsername = user.ManagerUsername,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            Address = user.Address,
+            City = user.City,
+            EmailConfirmed = user.EmailConfirmed,
+            MeetingsNotificationsOff = user.MeetingsNotificationsOff,
+        };
     }
 }

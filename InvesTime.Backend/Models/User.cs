@@ -31,15 +31,6 @@ public class User
     [Phone] public string PhoneNumber { get; set; } = string.Empty;
 
     public bool MeetingsNotificationsOff { get; set; } = false;
-
-    [MaxImageSize(2 * 1024 * 1024)] public byte[] Image { get; set; } = GetDefaultImage();
-
-
-    private static byte[] GetDefaultImage()
-    {
-        var defaultImagePath = "assets/default-image.png";
-        var defaultImageBytes = File.ReadAllBytes(defaultImagePath);
-
-        return defaultImageBytes;
-    }
+    public string Address { get; set; } = string.Empty;
+    public string City { get; set; } = string.Empty;
 }

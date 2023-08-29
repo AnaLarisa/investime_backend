@@ -1,7 +1,9 @@
-﻿using InvesTime.BackEnd.Helpers;
-using InvesTime.BackEnd.Services;
+﻿using InvesTime.BackEnd.Services;
+using InvesTime.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace InvesTime.BackEnd.Controllers;
 
@@ -24,7 +26,7 @@ public class UserStatisticsController : ControllerBase
     /// Sets the personal targeted number of clients/current year
     /// </summary>
     /// <param name="targetNrOfClientsPerYear"></param>
-    [HttpPost("target", Name = "SetTargetNrOfClientsPerYear")]
+    [HttpPost("targetNrOfClientsPerYear", Name = "SetTargetNrOfClientsPerYear")]
     public IActionResult SetTargetNrOfClientsPerYear(int targetNrOfClientsPerYear)
     {
         try
@@ -40,51 +42,46 @@ public class UserStatisticsController : ControllerBase
 
 
     /// <summary>
-    /// Get the targeted nr of clients + nr of clients until now for current user.
-    /// </summary>
-    [HttpGet("target", Name = "GetTargetNrOfClientsPerYear")]
-    public IActionResult GetTargetNrOfClientsPerYear()
-    {
-        try
-        {
-            var targetNrOfClientsPerYear = _userStatisticsService.GetUserStatistics();
-            return Ok(targetNrOfClientsPerYear);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-
-    /// <summary>
     /// Get all the meetings of current user sorted by Type (to be continued with date range filter)
     /// </summary>
-    [HttpGet("meetingsByType", Name = "GetMeetingsOfUserIdSortedByType")]
-    public IActionResult GetMeetingsOfCurrentUserSortedByType()
+    [HttpGet("fullStatistics", Name = "GetFullPersonalStatistics")]
+    public ActionResult<UserStatisticsDateRangeDto> GetFullStatisticsDateRange(
+        [FromQuery(Name = "startDate")][Required][SwaggerParameter("yyyy-MM-dd")] DateTime startDate,
+        [FromQuery(Name = "endDate")][Required][SwaggerParameter("yyyy-MM-dd")] DateTime endDate)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (startDate >= endDate)
+        {
+            return BadRequest("Start date must be before end date.");
+        }
+
         try
         {
-            var meetings = _meetingService.GetMeetingsOfUserIdSortedByType();
-            return Ok(meetings);
+            var userStatisticsDateRange = _userStatisticsService.GetUserStatisticsDateRangeDto(startDate, endDate);
+            return userStatisticsDateRange;
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500, "An error occurred while processing your request.");
         }
     }
 
 
     /// <summary>
-    /// Admin: Get all consultant's statistics (target + nr of clients until now)
+    /// Admin: Get a consultant's full statistics
     /// </summary>
-    [HttpGet("consultant/all", Name = "GetUserStatisticsForAdmin")]
-    [Authorize(Roles = "Admin")]
-    public IActionResult GetUserStatisticsForAdmin()
+    [HttpGet("fullStatistics/{username}", Name = "GetFullUserStatisticsForUsername")]
+    public IActionResult GetFullUserStatisticsForUsername(string username, 
+        [FromQuery(Name = "startDate")][Required][SwaggerParameter("yyyy-MM-dd")] DateTime startDate,
+        [FromQuery(Name = "endDate")][Required][SwaggerParameter("yyyy-MM-dd")] DateTime endDate)
     {
         try
         {
-            var userStatistics = _userStatisticsService.GetAllUserStatistics();
+            var userStatistics = _userStatisticsService.GetUserStatisticsDateRangeDto(startDate, endDate, username);
             return Ok(userStatistics);
         }
         catch (Exception ex)
@@ -95,25 +92,53 @@ public class UserStatisticsController : ControllerBase
 
 
     /// <summary>
-    /// Admin: Get all meetings of a type for a selected consultant username.
+    /// Get personal list of goals
     /// </summary>
-    /// <param name="consultantUsername"></param>
-    /// <param name="meetingType"></param>
-    /// <param name="startDay"></param>
-    /// <param name="endDay"></param>
-    [HttpGet("consultant/{consultantUsername}/meetings", Name = "GetMeetingsOfMeetingTypeByConsultantUsername")]
-    [Authorize(Roles = "Admin")]
-    public IActionResult GetMeetingsOfMeetingTypeByConsultantUsername(string consultantUsername, string meetingType,
-        string startDay, string endDay)
+    [HttpGet("goals/all", Name = "GetPersonalGoalsList")]
+    public ActionResult<IList<string>> GetPersonalGoalsList()
     {
-        var startDate = DateConversionHelper.ConvertToDateTime(startDay, "00:00");
-        var endDate = DateConversionHelper.ConvertToDateTime(endDay, "00:00");
         try
         {
-            var meetings =
-                _meetingService.GetMeetingsOfMeetingTypeByConsultantUsername(consultantUsername, meetingType, startDate,
-                    endDate);
-            return Ok(meetings);
+            var targetLists = _userStatisticsService.GetGoalsListsForCurrentUser();
+            return Ok(targetLists);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+
+    /// <summary>
+    /// Add a new goal to personal list of goals
+    /// </summary>
+    /// <param name="goal"></param>
+    [HttpPost("goals/add", Name = "AddGoalToList")]
+    public IActionResult AddGoalToList(string goal)
+    {
+        try
+        {
+            _userStatisticsService.AddGoalToList(goal);
+            return Ok($"Goal \"{goal}\" added to list");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+
+    /// <summary>
+    /// Delete a goal from personal list of goals
+    /// </summary>
+    /// <param name="goal"></param>
+    [HttpDelete("goals/delete", Name = "RemoveGoalToList")]
+    public IActionResult RemoveGoalToList(string goal)
+    {
+        try
+        {
+            _userStatisticsService.RemoveGoalFromList(goal);
+            return Ok($"Goal \"{goal}\" removed from list");
         }
         catch (Exception ex)
         {

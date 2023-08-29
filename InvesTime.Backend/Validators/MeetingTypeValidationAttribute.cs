@@ -1,32 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using InvesTime.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace InvesTime.BackEnd.Validators;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class MeetingTypeValidationAttribute : ValidationAttribute
 {
-    private static readonly List<string> ValidMeetingTypes = new()
-    {
-        "Analysis",
-        "Consultation(C1)",
-        "Consultation(C2)",
-        "Service",
-        "PersonalMeeting",
-        "TeamMeeting",
-        "TellParty",
-        "Seminar",
-        "Training"
-    };
-
     public override bool IsValid(object? value)
     {
-        if (value != null)
+        if (value != null && Enum.TryParse(value.ToString(), out MeetingType meetingType))
         {
-            var meetingType = value.ToString();
-
-            return ValidMeetingTypes.Contains(meetingType!);
+            return Enum.IsDefined(typeof(MeetingType), meetingType);
         }
 
-        throw new InvalidOperationException("The MeetingType appears to be null.");
+        throw new InvalidOperationException("The MeetingType is not a valid enum value. -- ");
     }
 }

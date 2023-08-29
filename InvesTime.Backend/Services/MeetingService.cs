@@ -2,6 +2,7 @@
 using InvesTime.BackEnd.Helpers;
 using InvesTime.BackEnd.Models;
 using InvesTime.BackEnd.Models.DTO;
+using InvesTime.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace InvesTime.BackEnd.Services;
@@ -59,9 +60,13 @@ public class MeetingService : IMeetingService
         meeting.UserId = _userHelper.GetCurrentUserId();
         await _repository.AddMeeting(meeting);
 
-        if (meeting.Type == "Consultation(C2)")
+        if (meeting.Type == nameof(MeetingType.ConsultationC2))
         {
-            _userStatisticsService.IncreaseNrOfClientsPerYear();
+            _userStatisticsService.IncreaseNrOfContractsSignedPerYear();
+        }
+        else if (meeting.Type == nameof(MeetingType.ConsultationC1))
+        {
+            _userStatisticsService.IncreaseNrOfClientsCount();
         }
 
         return meeting;
@@ -82,46 +87,25 @@ public class MeetingService : IMeetingService
     public bool DeleteMeeting(string id)
     {
         if (id.IsNullOrEmpty()) throw new ArgumentException("Meeting ID is required.");
+        var meeting = _repository.GetMeetingById(id);
 
         var result = _repository.DeleteMeeting(id);
         if (result == false)
             throw new InvalidOperationException($"Deletion operation failed for meeting with id: {id}");
 
+        if (meeting.Type == nameof(MeetingType.ConsultationC2))
+            _userStatisticsService.DecreaseNrOfContractsSignedPerYear();
+
         return true;
     }
 
-
-    public Dictionary<string, IList<Meeting>> GetMeetingsOfUserIdSortedByType(string userId = "")
+    public IList<Dictionary<string, int>> GetMeetingsCountByUserIdDateRange(DateTime startDate, DateTime endDate, string userId = "")
     {
-        if (userId == "")
+        if (userId.IsNullOrEmpty())
         {
             userId = _userHelper.GetCurrentUserId();
         }
 
-        var userMeetings = _repository.GetMeetingsByUserId(userId);
-        var meetingsByType = new Dictionary<string, IList<Meeting>>();
-
-        foreach (var meeting in userMeetings)
-        {
-            if (!meetingsByType.ContainsKey(meeting.Type))
-            {
-                meetingsByType[meeting.Type] = new List<Meeting>();
-            }
-
-            meetingsByType[meeting.Type].Add(meeting);
-        }
-
-
-        return meetingsByType;
-    }
-
-
-    public IList<Meeting> GetMeetingsOfMeetingTypeByConsultantUsername(string consultantUsername, string meetingType,
-        DateTime startDate, DateTime endDate)
-    {
-        if (consultantUsername.IsNullOrEmpty()) throw new ArgumentException("Consultant username is required.");
-        var consultantId = _userService.GetUserIdByUsername(consultantUsername);
-
-        return _repository.GetMeetingsByConsultantId(consultantId, meetingType, startDate, endDate);
+        return _repository.GetMeetingsCountByUserIdDateRange(startDate, endDate, userId);
     }
 }

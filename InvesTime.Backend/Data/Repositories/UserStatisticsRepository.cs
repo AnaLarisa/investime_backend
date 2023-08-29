@@ -12,15 +12,10 @@ public class UserStatisticsRepository : IUserStatisticsRepository
         _userStatisticsCollection = database.GetCollection<UserStatistics>("userStatistics")!;
     }
 
-    public UserStatistics? GetUserStatisticsById(string userId)
+    public UserStatistics? GetUserStatisticsByUsername(string username)
     {
-        var filter = Builders<UserStatistics>.Filter.Eq(u => u.Id, userId);
+        var filter = Builders<UserStatistics>.Filter.Eq(u => u.ConsultantUsername, username);
         return _userStatisticsCollection!.Find(filter).FirstOrDefault();
-    }
-
-    public List<UserStatistics?> GetAllUserStatistics()
-    {
-        return _userStatisticsCollection.Find(_ => true).ToList();
     }
 
     public void AddUserStatistics(UserStatistics? userStatistics)

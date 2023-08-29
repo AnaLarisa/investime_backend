@@ -1,6 +1,7 @@
 ﻿using InvesTime.BackEnd.Data.Repositories;
 using InvesTime.BackEnd.Helpers;
 using InvesTime.BackEnd.Models;
+using InvesTime.Models.DTO;
 
 namespace InvesTime.BackEnd.Services;
 
@@ -9,98 +10,109 @@ public class UserStatisticsService : IUserStatisticsService
     private readonly IMeetingRepository _meetingRepository;
     private readonly IUserHelper _userHelper;
     private readonly IUserStatisticsRepository _userStatisticsRepository;
+    private readonly IUserRepository _userRepository;
+    private UserStatistics _currentUserStatistics;
 
     public UserStatisticsService(IUserStatisticsRepository userStatisticsRepository,
-        IMeetingRepository meetingRepository, IUserHelper userHelper)
+        IMeetingRepository meetingRepository, IUserHelper userHelper, IUserRepository userRepository)
     {
         _userStatisticsRepository = userStatisticsRepository;
         _meetingRepository = meetingRepository;
         _userHelper = userHelper;
+        _userRepository = userRepository;
+        _currentUserStatistics = GetUserStatistics();
     }
+
+    public IList<string> GetGoalsListsForCurrentUser()
+    {
+        return _currentUserStatistics.GoalsList;
+    }
+
+
+    public void AddGoalToList(string goal)
+    {
+        _currentUserStatistics.GoalsList.Add(goal);
+        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+    }
+
+
+    public void RemoveGoalFromList(string goal)
+    {
+        var goalToRemove = _currentUserStatistics.GoalsList.FirstOrDefault(g => g == goal);
+
+        if (goalToRemove != null)
+        {
+            _currentUserStatistics.GoalsList.Remove(goalToRemove);
+            _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+        }
+    }
+
 
     public void SetTargetNrOfClientsPerYear(int targetNrOfClients)
     {
-        var userId = _userHelper.GetCurrentUserId();
-        var username = _userHelper.GetCurrentUserUsername();
-        var userStatistics = _userStatisticsRepository.GetUserStatisticsById(userId);
+        _currentUserStatistics.TargetNrOfClientsPerYear = targetNrOfClients;
+        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+    }
 
-        if (userStatistics == null)
+
+    public void IncreaseNrOfClientsCount()
+    {
+        _currentUserStatistics.ClientsCount++;
+        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+    }
+
+
+    public void IncreaseNrOfContractsSignedPerYear()
+    {
+        _currentUserStatistics.ContractsSigned++;
+        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+    }    
+    
+    public void DecreaseNrOfContractsSignedPerYear()
+    {
+        _currentUserStatistics.ContractsSigned--;
+        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+    }
+
+    private UserStatistics GetUserStatistics(string username = "")
+    {
+        if (username == "")
         {
-            userStatistics = new UserStatistics
+            username = _userHelper.GetCurrentUserUsername();
+        }
+
+        var currentUserStatistics = _userStatisticsRepository.GetUserStatisticsByUsername(username);
+        if (currentUserStatistics == null)
+        {
+            var newUserStatistics = new UserStatistics
             {
-                Id = userId,
-                Username = username,
-                TargetNrOfClientsPerYear = targetNrOfClients
+                ConsultantUsername = username
             };
-            _userStatisticsRepository.AddUserStatistics(userStatistics);
+            _userStatisticsRepository.AddUserStatistics(newUserStatistics);
+            return newUserStatistics;
         }
-        else
+        return currentUserStatistics;
+    }
+
+    public UserStatisticsDateRangeDto GetUserStatisticsDateRangeDto(DateTime startDate, DateTime endDate, string username = "")
+    {
+        if (username == "")
         {
-            userStatistics.TargetNrOfClientsPerYear = targetNrOfClients;
-            _userStatisticsRepository.UpdateUserStatistics(userStatistics);
+            username = _userHelper.GetCurrentUserUsername();
         }
-    }
 
-    public void IncreaseNrOfClientsPerYear()
-    {
-        var userId = _userHelper.GetCurrentUserId();
-        var username = _userHelper.GetCurrentUserUsername();
-        var userStatistics = _userStatisticsRepository.GetUserStatisticsById(userId);
+        var userId = _userRepository.GetUserByUsername(username)!.Id;
+        var meet = _meetingRepository.GetMeetingsCountByUserIdDateRange(startDate, endDate, userId);
 
-        if (userStatistics == null)
+
+        return new UserStatisticsDateRangeDto
         {
-            userStatistics = new UserStatistics
-            {
-                Id = userId,
-                Username = username,
-                TargetNrOfClientsPerYear = 0,
-                ClientsCount = 1
-            };
-            _userStatisticsRepository.AddUserStatistics(userStatistics);
-        }
-        else
-        {
-            userStatistics.ClientsCount++;
-            _userStatisticsRepository.UpdateUserStatistics(userStatistics);
-        }
-    }
-
-    public Dictionary<DateTime, int> GetMeetingCountByDay(string userId, string meetingType, DateTime startDate,
-        DateTime endDate)
-    {
-        var meetings = _meetingRepository.GetMeetingsByUserId(userId);
-
-        var meetingCountByDay = new Dictionary<DateTime, int>();
-
-        foreach (var meeting in meetings)
-            if (meeting.Type == meetingType && meeting.Date >= startDate && meeting.Date <= endDate)
-            {
-                var day = meeting.Date.Date;
-                if (!meetingCountByDay.ContainsKey(day)) meetingCountByDay[day] = 0;
-
-                meetingCountByDay[day]++;
-            }
-
-        return meetingCountByDay;
-    }
-
-    public UserStatistics? GetUserStatistics(string userId = "")
-    {
-        if (userId == "") userId = _userHelper.GetCurrentUserId();
-
-        return _userStatisticsRepository.GetUserStatisticsById(userId);
-    }
-
-    public Dictionary<string, Tuple<int, int>> GetAllUserStatistics()
-    {
-        var userStatisticsDictionary = new Dictionary<string, Tuple<int, int>>();
-
-        var allUserStatistics = _userStatisticsRepository.GetAllUserStatistics();
-
-        foreach (var userStatistics in allUserStatistics)
-            userStatisticsDictionary[userStatistics!.Username] = Tuple.Create(userStatistics.TargetNrOfClientsPerYear,
-                userStatistics.ClientsCount);
-
-        return userStatisticsDictionary;
+            StartDate = startDate,
+            EndDate = endDate,
+            TargetNrOfClientsPerYear = _currentUserStatistics.TargetNrOfClientsPerYear,
+            ContractsSigned = _currentUserStatistics.ContractsSigned,
+            ClientsCount = _currentUserStatistics.ClientsCount,
+            MeetingsByMeetingType = meet
+        };
     }
 }
