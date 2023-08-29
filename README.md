@@ -95,13 +95,6 @@ Based on this diagram, this API contains endpoints that satisfy the following:
 -   Date: DateTime
 <br>
 
-<b>News:</b>
--   string: Title
--	string: Author
--	string: Url
--	string: UrlToImage
-<br>
-
 <b>UserStatistics:</b>
 -   string: Id (auto-generated)
 -   string: Username
