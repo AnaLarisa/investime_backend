@@ -23,7 +23,7 @@ public class MeetingDto
 
     public string? Location { get; set; }
 
-    [Required] [MeetingTypeValidation] public string Type { get; set; } = "Internal";
+    [Required] [MeetingTypeValidation] public string Type { get; set; } = "Analysis";
 
     public string? Description { get; set; }
 

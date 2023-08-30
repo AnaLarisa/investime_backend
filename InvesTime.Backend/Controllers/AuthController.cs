@@ -50,8 +50,12 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<IList<RegistrationRequest>>> GetRegistrationRequestsByManager()
     {
         var requests = await _registrationRequestService.GetRegistrationRequestsByManagerName();
+        if (requests.Count > 0)
+        {
+            return Ok(requests);
+        }
 
-        return Ok(requests);
+        return NotFound("No registration requests found.");
     }
 
 
@@ -84,9 +88,12 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<bool>> RejectRegistrationRequest(string requestId)
     {
         var result = await _registrationRequestService.DeleteRegistrationRequest(requestId);
-        if (result == false) return BadRequest("The registration request was not found in the database.");
+        if (result)
+        {
+            return Ok("The registration request has been successfully deleted.");
+        }
 
-        return Ok("The registration request has been successfully deleted.");
+        return BadRequest("The registration request was not found in the database.");
     }
 
 

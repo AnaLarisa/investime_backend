@@ -28,4 +28,10 @@ public class UserStatisticsRepository : IUserStatisticsRepository
         var filter = Builders<UserStatistics>.Filter.Eq(u => u.Id, userStatistics.Id);
         _userStatisticsCollection.ReplaceOne(filter!, userStatistics);
     }
+
+    public bool DeleteUserStatistics(string username)
+    {
+        var filter = Builders<UserStatistics>.Filter.Eq(u => u.Username, username);
+        return _userStatisticsCollection.DeleteOne(filter).DeletedCount > 0;
+    }
 }

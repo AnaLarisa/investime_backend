@@ -11,7 +11,6 @@ public class UserStatisticsService : IUserStatisticsService
     private readonly IUserHelper _userHelper;
     private readonly IUserStatisticsRepository _userStatisticsRepository;
     private readonly IUserRepository _userRepository;
-    private UserStatistics _currentUserStatistics;
 
     public UserStatisticsService(IUserStatisticsRepository userStatisticsRepository,
         IMeetingRepository meetingRepository, IUserHelper userHelper, IUserRepository userRepository)
@@ -20,58 +19,69 @@ public class UserStatisticsService : IUserStatisticsService
         _meetingRepository = meetingRepository;
         _userHelper = userHelper;
         _userRepository = userRepository;
-        _currentUserStatistics = GetUserStatistics();
     }
 
     public IList<string> GetGoalsListsForCurrentUser()
     {
-        return _currentUserStatistics.GoalsList;
+        return GetUserStatistics().GoalsList;
     }
 
 
     public void AddGoalToList(string goal)
     {
-        _currentUserStatistics.GoalsList.Add(goal);
-        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+        var currentUserStatistics = GetUserStatistics();
+        currentUserStatistics.GoalsList.Add(goal);
+        _userStatisticsRepository.UpdateUserStatistics(currentUserStatistics);
     }
 
 
     public void RemoveGoalFromList(string goal)
     {
-        var goalToRemove = _currentUserStatistics.GoalsList.FirstOrDefault(g => g == goal);
-
+        var goalToRemove = GetUserStatistics().GoalsList.FirstOrDefault(g => g == goal);
+        var currentUserStatistics = GetUserStatistics();
         if (goalToRemove != null)
         {
-            _currentUserStatistics.GoalsList.Remove(goalToRemove);
-            _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+            currentUserStatistics.GoalsList.Remove(goalToRemove);
+            _userStatisticsRepository.UpdateUserStatistics(currentUserStatistics);
         }
     }
 
 
     public void SetTargetNrOfClientsPerYear(int targetNrOfClients)
     {
-        _currentUserStatistics.TargetNrOfClientsPerYear = targetNrOfClients;
-        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+        var currentUserStatistics = GetUserStatistics();
+        currentUserStatistics.TargetNrOfClientsPerYear = targetNrOfClients;
+        _userStatisticsRepository.UpdateUserStatistics(currentUserStatistics);
     }
 
 
     public void IncreaseNrOfClientsCount()
     {
-        _currentUserStatistics.ClientsCount++;
-        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+        var currentUserStatistics = GetUserStatistics();
+        currentUserStatistics.ClientsCount++;
+        _userStatisticsRepository.UpdateUserStatistics(currentUserStatistics);
     }
 
 
     public void IncreaseNrOfContractsSignedPerYear()
     {
-        _currentUserStatistics.ContractsSigned++;
-        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+        var currentUserStatistics = GetUserStatistics();
+        currentUserStatistics.ContractsSigned++;
+        _userStatisticsRepository.UpdateUserStatistics(currentUserStatistics);
     }    
     
     public void DecreaseNrOfContractsSignedPerYear()
     {
-        _currentUserStatistics.ContractsSigned--;
-        _userStatisticsRepository.UpdateUserStatistics(_currentUserStatistics);
+        var currentUserStatistics = GetUserStatistics();
+        currentUserStatistics.ContractsSigned--;
+        _userStatisticsRepository.UpdateUserStatistics(currentUserStatistics);
+    }
+
+    public void DecreaseNrOfClientsCount()
+    {
+        var currentUserStatistics = GetUserStatistics();
+        currentUserStatistics.ClientsCount--;
+        _userStatisticsRepository.UpdateUserStatistics(currentUserStatistics);
     }
 
     private UserStatistics GetUserStatistics(string username = "")
@@ -103,15 +113,15 @@ public class UserStatisticsService : IUserStatisticsService
 
         var userId = _userRepository.GetUserByUsername(username)!.Id;
         var meet = _meetingRepository.GetMeetingsCountByUserIdDateRange(startDate, endDate, userId);
-
+        var currentUserStatistics = GetUserStatistics();
 
         return new UserStatisticsDateRangeDto
         {
             StartDate = startDate,
             EndDate = endDate,
-            TargetNrOfClientsPerYear = _currentUserStatistics.TargetNrOfClientsPerYear,
-            ContractsSigned = _currentUserStatistics.ContractsSigned,
-            ClientsCount = _currentUserStatistics.ClientsCount,
+            TargetNrOfClientsPerYear = currentUserStatistics.TargetNrOfClientsPerYear,
+            ContractsSigned = currentUserStatistics.ContractsSigned,
+            ClientsCount = currentUserStatistics.ClientsCount,
             MeetingsByMeetingType = meet
         };
     }

@@ -26,6 +26,12 @@ public class UserHelper : IUserHelper
         var claimsIdentity = httpContext?.User.Identity as ClaimsIdentity;
         return claimsIdentity?.FindFirst(ClaimTypes.Name)?.Value ??
                throw new InvalidOperationException("Current user username not found.");
-        ;
+    }
+
+    public bool IsCurrentUserAdmin()
+    {
+        var httpContext = _contextAccessor.HttpContext;
+        var claimsIdentity = httpContext?.User.Identity as ClaimsIdentity;
+        return claimsIdentity?.FindFirst(ClaimTypes.Role)?.Value == "Admin";
     }
 }

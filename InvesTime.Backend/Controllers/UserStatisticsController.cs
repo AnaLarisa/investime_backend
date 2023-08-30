@@ -75,7 +75,7 @@ public class UserStatisticsController : ControllerBase
     /// Get a consultant's full statistics between start and end date by username
     /// </summary>
     [HttpGet("fullStatistics/{username}", Name = "GetFullUserStatisticsForUsername")]
-    public IActionResult GetFullUserStatisticsForUsername(string username, 
+    public IActionResult GetFullUserStatisticsForUsername(string username,
         [FromQuery(Name = "startDate")][Required][SwaggerParameter("yyyy-MM-dd")] DateTime startDate,
         [FromQuery(Name = "endDate")][Required][SwaggerParameter("yyyy-MM-dd")] DateTime endDate)
     {
@@ -100,7 +100,14 @@ public class UserStatisticsController : ControllerBase
         try
         {
             var targetLists = _userStatisticsService.GetGoalsListsForCurrentUser();
-            return Ok(targetLists);
+            if (targetLists.Count > 0)
+            {
+                return Ok(targetLists);
+            }
+            else
+            {
+                return NotFound("Your goal list currently has no entries. Begin by adding your first goal!");
+            }
         }
         catch (Exception ex)
         {

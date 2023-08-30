@@ -14,7 +14,6 @@ public interface IUserService
     public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
     public bool ChangePassword(ChangePasswordDto changePasswordDto);
     public bool DeleteConsultant(string username);
-    public void DeleteAllMeetingsOfUserId(string userId);
     public bool IsUsernameTaken(string username);
-    public IList<string> GetAllConsultantUsernamesUnderManager();
+    public IList<User> GetAllConsultantsUnderManager();
 }

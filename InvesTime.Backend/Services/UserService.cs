@@ -15,17 +15,19 @@ namespace InvesTime.BackEnd.Services;
 public class UserService : IUserService
 {
     private readonly IConfiguration _configuration;
-    private readonly IMeetingRepository _meetingRepository;
+    private readonly IMeetingService _meetingService;
     private readonly IUserHelper _userHelper;
     private readonly IUserRepository _userRepository;
+    private readonly IUserStatisticsRepository _userStatisticsRepository;
 
     public UserService(IConfiguration configuration, IUserHelper userHelper, IUserRepository userRepository,
-        IMeetingRepository meetingRepository)
+        IMeetingService meetingService, IUserStatisticsRepository userStatisticsRepository)
     {
         _configuration = configuration;
+        _meetingService = meetingService;
         _userHelper = userHelper;
         _userRepository = userRepository;
-        _meetingRepository = meetingRepository;
+        _userStatisticsRepository = userStatisticsRepository;
     }
 
 
@@ -56,7 +58,15 @@ public class UserService : IUserService
             Email = registrationRequest.Email
         };
 
-        return _userRepository.CreateUser(user);
+        user = _userRepository.CreateUser(user);
+        if (user == null)
+        {
+            throw new InvalidDataException("The user could not be created.");
+        }
+
+        _meetingService.AddUpcomingTeamMeetingsForUser(user);
+
+        return user;
     }
 
 
@@ -120,7 +130,8 @@ public class UserService : IUserService
         if (user == null) throw new InvalidDataException("The current user is not present in the database.");
         if (user.IsAdmin) throw new InvalidDataException("The user is an admin and cannot be deleted.");
 
-        DeleteAllMeetingsOfUserId(user.Id);
+        _meetingService.DeleteAllMeetingsOfUserId(user.Id);
+        DeleteAllUserStatisticsOfUsername(user.Username);
 
         var deleteUser = _userRepository.DeleteUser(user.Id);
         if (!deleteUser) throw new InvalidDataException("The delete operation failed.");
@@ -128,11 +139,9 @@ public class UserService : IUserService
         return true;
     }
 
-
-    public void DeleteAllMeetingsOfUserId(string userId)
+    private void DeleteAllUserStatisticsOfUsername(string username)
     {
-        var deletedMeetings = _meetingRepository.DeleteAllMeetingsOfUserId(userId);
-        if (deletedMeetings == false) throw new InvalidDataException("The user's meetings cannot be deleted.");
+        _userStatisticsRepository.DeleteUserStatistics(username);
     }
 
 
@@ -141,10 +150,18 @@ public class UserService : IUserService
         return _userRepository.ExistsByUsername(username);
     }
 
-    public IList<string> GetAllConsultantUsernamesUnderManager()
+    public IList<User> GetAllConsultantsUnderManager()
     {
-        var managerUsername = _userHelper.GetCurrentUserUsername();
-        return _userRepository.GetAllConsultantUsernamesUnderManager(managerUsername).Select(u => u.Username).ToList();
+        if (_userHelper.IsCurrentUserAdmin())
+        {
+            var managerUsername = _userHelper.GetCurrentUserUsername();
+            return _userRepository.GetAllConsultantUsernamesUnderManager(managerUsername);
+        }
+        else
+        {
+            var currentUser = _userRepository.GetUserById(_userHelper.GetCurrentUserId());
+            return _userRepository.GetAllConsultantUsernamesUnderManager(currentUser!.ManagerUsername);
+        }
     }
 
 
