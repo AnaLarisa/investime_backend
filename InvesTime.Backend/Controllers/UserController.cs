@@ -7,6 +7,7 @@ namespace InvesTime.BackEnd.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -20,11 +21,15 @@ public class UserController : ControllerBase
     /// <summary>
     /// Admin: Get a list of all the consultants the logged in manager has.
     /// </summary>
-    [HttpGet("/my/consultants/", Name = "GetAllConsultantUsernamesUnderManager")]
-    [Authorize(Roles = "Admin")]
+    [HttpGet("/team/all", Name = "GetAllConsultantsUnderManager")]
     public ActionResult<IList<string>> GetAllConsultantUsernamesUnderManager()
     {
-        return Ok(_userService.GetAllConsultantUsernamesUnderManager());
+        var usernameList = _userService.GetAllConsultantsUnderManager();
+        if (usernameList.Count > 0)
+        {
+            return Ok(usernameList.Select(u => u.Username).ToList());
+        }
+        return NotFound("No consultants found.");
     }
 
 
@@ -33,7 +38,6 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="changePasswordDto"></param>
     [HttpPut("changePassword", Name = "ChangePassword")]
-    [Authorize]
     public ActionResult ChangePassword(ChangePasswordDto changePasswordDto)
     {
         if (!changePasswordDto.NewPassword.Equals(changePasswordDto.NewPasswordAgain))

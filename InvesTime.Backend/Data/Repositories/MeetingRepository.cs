@@ -31,9 +31,15 @@ public class MeetingRepository : IMeetingRepository
         _meetings.ReplaceOne(filter, updatedMeeting);
     }
 
-    public bool DeleteMeeting(string id)
+    public bool DeleteMeetingById(string id)
     {
         var result = _meetings.DeleteOne(m => m.Id == id);
+        return result.DeletedCount > 0;
+    }
+
+    public bool DeleteMeeting(string location, string title, string userId)
+    {
+        var result = _meetings.DeleteOne(m =>(m.Location == location && m.Title == title && m.UserId == userId));
         return result.DeletedCount > 0;
     }
 
@@ -46,6 +52,15 @@ public class MeetingRepository : IMeetingRepository
     public IList<Meeting> GetMeetingsByUserId(string userId)
     {
         return _meetings.Find(m => m.UserId == userId).ToList();
+    }
+
+    public IList<Meeting> GetTeamMeetingsByManagerId(string managerId)
+    {
+        return _meetings.Find(m => (m.UserId == managerId
+                                    && (m.Type == nameof(MeetingType.TeamMeeting) || 
+                                        m.Type == nameof(MeetingType.TellParty) ||
+                                        m.Type == nameof(MeetingType.Seminar) ||
+                                        m.Type == nameof(MeetingType.Training)))).ToList();
     }
 
     public IList<Dictionary<string, int>> GetMeetingsCountByUserIdDateRange(DateTime startDate, DateTime endDate, string userId)

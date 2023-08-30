@@ -29,7 +29,7 @@ public class Meeting
 
     public string? Location { get; set; } = "Google Meets link";
 
-    [Required] [MeetingTypeValidation] public string Type { get; set; } = "Internal";
+    [Required] [MeetingTypeValidation] public string Type { get; set; } = "Analysis";
 
     public string? Description { get; set; } = string.Empty;
 

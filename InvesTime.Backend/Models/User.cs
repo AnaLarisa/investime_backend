@@ -33,4 +33,5 @@ public class User
     public bool MeetingsNotificationsOff { get; set; } = false;
     public string Address { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
+    public DateTime CreatedOn { get; set; } = DateTime.Now;
 }

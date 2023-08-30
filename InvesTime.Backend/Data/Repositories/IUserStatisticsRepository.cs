@@ -7,4 +7,6 @@ public interface IUserStatisticsRepository
     void AddUserStatistics(UserStatistics? userStatistics); 
     UserStatistics? GetUserStatisticsByUsername(string username);
     void UpdateUserStatistics(UserStatistics userStatistics);
+    public bool DeleteUserStatistics(string username);
+
 }

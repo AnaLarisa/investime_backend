@@ -1,5 +1,4 @@
-﻿using InvesTime.BackEnd.Models;
-using InvesTime.Models.DTO;
+﻿using InvesTime.Models.DTO;
 
 namespace InvesTime.BackEnd.Services;
 
@@ -11,6 +10,7 @@ public interface IUserStatisticsService
     void SetTargetNrOfClientsPerYear(int targetNrOfClients);
     void IncreaseNrOfContractsSignedPerYear();
     void DecreaseNrOfContractsSignedPerYear();
+    void DecreaseNrOfClientsCount();
     public void IncreaseNrOfClientsCount();
     UserStatisticsDateRangeDto GetUserStatisticsDateRangeDto(DateTime startDate, DateTime endDate, string username = "");
 
