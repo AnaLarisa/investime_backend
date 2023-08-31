@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvesTime.BackEnd.Controllers;
 
-[Route("api/[controller]")]
+[Route("user")]
 [ApiController]
 [Authorize]
 public class UserController : ControllerBase
@@ -21,7 +21,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Admin: Get a list of all the consultants the logged in manager has.
     /// </summary>
-    [HttpGet("/team/all", Name = "GetAllConsultantsUnderManager")]
+    [HttpGet("/team", Name = "GetAllConsultantsUnderManager")]
     public ActionResult<IList<string>> GetAllConsultantUsernamesUnderManager()
     {
         var usernameList = _userService.GetAllConsultantsUnderManager();

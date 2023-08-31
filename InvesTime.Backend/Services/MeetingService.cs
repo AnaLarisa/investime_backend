@@ -76,10 +76,6 @@ public class MeetingService : IMeetingService
             {
                 _userStatisticsService.IncreaseNrOfClientsCount();
             }
-            else
-            {
-                throw new SecurityTokenException("You are not allowed to add this type of meeting.");
-            }
         }
 
         return meeting;

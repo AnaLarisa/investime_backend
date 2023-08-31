@@ -40,15 +40,17 @@ public class NewsApiRepository : INewsApiRepository
 
                 foreach (var article in articlesElement.EnumerateArray())
                 {
-                    var newsModel = new NewsModel
-                    {
-                        Title = JsonHelper.GetStringOrDefault(article, "title"),
-                        Author = JsonHelper.GetStringOrDefault(article, "author"),
-                        Url = JsonHelper.GetStringOrDefault(article, "url"),
-                        UrlToImage = JsonHelper.GetStringOrDefault(article, "urlToImage")
-                    };
+                    var title = JsonHelper.GetStringOrDefault(article, "title");
+                    var author = JsonHelper.GetStringOrDefault(article, "author");
+                    var url = JsonHelper.GetStringOrDefault(article, "url");
+                    var urlToImage = JsonHelper.GetStringOrDefault(article, "urlToImage");
 
-                    newsList.Add(newsModel);
+                    var newsModel = CreateNewsModel(title, author, url, urlToImage);
+
+                    if (newsModel != null)
+                    {
+                        newsList.Add(newsModel);
+                    }
                 }
 
                 return newsList;
@@ -66,4 +68,24 @@ public class NewsApiRepository : INewsApiRepository
         }
     }
 
+    private NewsModel CreateNewsModel(string title, string author, string url, string urlToImage)
+    {
+        if (string.IsNullOrWhiteSpace(title) && string.IsNullOrWhiteSpace(author) && string.IsNullOrWhiteSpace(urlToImage))
+        {
+            return null;
+        }
+
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return null;
+        }
+
+        return new NewsModel
+        {
+            Title = title,
+            Author = author,
+            Url = url,
+            UrlToImage = urlToImage
+        };
+    }
 }

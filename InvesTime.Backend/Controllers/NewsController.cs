@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace InvesTime.BackEnd.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("news")]
 [Authorize]
 public class NewsController : ControllerBase
 {

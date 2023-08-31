@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvesTime.BackEnd.Controllers;
 
-[Route("api/[controller]")]
+[Route("auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {

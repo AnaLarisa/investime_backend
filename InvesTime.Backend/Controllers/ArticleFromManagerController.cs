@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvesTime.BackEnd.Controllers;
 
-[Route("api/[controller]")]
+[Route("articlesFromManager")]
 [ApiController]
 [Authorize]
 public class ArticleFromManagerController : Controller

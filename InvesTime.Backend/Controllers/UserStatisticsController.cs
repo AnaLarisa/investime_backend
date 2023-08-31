@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace InvesTime.BackEnd.Controllers;
 
 [ApiController]
-[Route("api/user-statistics")]
+[Route("statistics")]
 [Authorize]
 public class UserStatisticsController : ControllerBase
 {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvesTime.BackEnd.Controllers;
 
-[Route("api/[controller]")]
+[Route("meeting")]
 [ApiController]
 [Authorize]
 public class MeetingController : Controller
