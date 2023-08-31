@@ -25,7 +25,7 @@ public class UserStatisticsRepository : IUserStatisticsRepository
 
     public void UpdateUserStatistics(UserStatistics userStatistics)
     {
-        var filter = Builders<UserStatistics>.Filter.Eq(u => u.Id, userStatistics.Id);
+        var filter = Builders<UserStatistics>.Filter.Eq(u => u.Username, userStatistics.Username);
         _userStatisticsCollection.ReplaceOne(filter!, userStatistics);
     }
 
