@@ -54,7 +54,7 @@ public class UserStatisticsController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        if (startDate >= endDate)
+        if (startDate > endDate)
         {
             return BadRequest("Start date must be before end date.");
         }
@@ -139,8 +139,8 @@ public class UserStatisticsController : ControllerBase
     /// Delete a goal from personal list of goals
     /// </summary>
     /// <param name="goal"></param>
-    [HttpDelete("goals/delete", Name = "RemoveGoalToList")]
-    public IActionResult RemoveGoalToList(string goal)
+    [HttpDelete("goals/delete", Name = "RemoveGoalFromList")]
+    public IActionResult RemoveGoalFromList(string goal)
     {
         try
         {
