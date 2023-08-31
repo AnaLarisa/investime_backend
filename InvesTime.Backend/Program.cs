@@ -3,6 +3,8 @@ using System.Text;
 using InvesTime.BackEnd.Data.Repositories;
 using InvesTime.BackEnd.Helpers;
 using InvesTime.BackEnd.Services;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
@@ -51,7 +53,16 @@ public class Program
         builder.Services.AddScoped<IUserHelper, UserHelper>();
 
         builder.Services.AddHttpContextAccessor();
-
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontEnd",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+        });
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -83,18 +94,17 @@ public class Program
             };
         });
 
-
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         // if (app.Environment.IsDevelopment())
         // {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+        app.UseSwagger();
+        app.UseSwaggerUI();
         //}
 
         app.UseHttpsRedirection();
-
+        app.UseCors("AllowFrontEnd");
         app.UseAuthorization();
 
         app.MapControllers();
