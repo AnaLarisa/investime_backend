@@ -1,5 +1,6 @@
 ﻿using InvesTime.BackEnd.Models.DTO;
 using InvesTime.BackEnd.Services;
+using InvesTime.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +20,33 @@ public class UserController : ControllerBase
 
 
     /// <summary>
+    /// Updates the user's information. Everything can be sent empty except the manager username.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="userUpdateInfoDto"></param>
+    /// <returns></returns>
+    [HttpPut("updateUser", Name = "UpdateUserById")]
+    public ActionResult UpdateUserById(UserUpdateInfoDto userUpdateInfoDto)
+    {
+        try
+        {
+            _userService.UpdateCurrentUser(userUpdateInfoDto);
+
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok("User updated successfully.");
+    }
+
+
+
+    /// <summary>
     /// Admin: Get a list of all the consultants the logged in manager has.
     /// </summary>
-    [HttpGet("/team", Name = "GetAllConsultantsUnderManager")]
+    [HttpGet("team", Name = "GetAllConsultantsUnderManager")]
     public ActionResult<IList<string>> GetAllConsultantUsernamesUnderManager()
     {
         var usernameList = _userService.GetAllConsultantsUnderManager();
@@ -30,6 +55,22 @@ public class UserController : ControllerBase
             return Ok(usernameList.Select(u => u.Username).ToList());
         }
         return NotFound("No consultants found.");
+    }
+
+
+    /// <summary>
+    /// Gets all the available managers from the database (their usernames)
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("managers/all", Name = "GetAllManagers")]
+    public ActionResult<IList<string>> GetAllManagers()
+    {
+        var usernameList = _userService.GetAllManagers();
+        if (usernameList.Count > 0)
+        {
+            return Ok(usernameList.Select(u => u.Username).ToList());
+        }
+        return NotFound("No managers found.");
     }
 
 
@@ -61,7 +102,7 @@ public class UserController : ControllerBase
     /// Admin: Delete a consultant from the database (along with its meetings).
     /// </summary>
     /// <param name="consultantUsername"></param>
-    [HttpDelete("{consultantUsername}", Name = "DeleteConsultant")]
+    [HttpDelete("delete/{consultantUsername}", Name = "DeleteConsultant")]
     [Authorize(Roles = "Admin")]
     public ActionResult DeleteConsultant(string consultantUsername)
     {
