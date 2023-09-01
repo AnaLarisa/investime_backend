@@ -31,18 +31,6 @@ public class UserService : IUserService
     }
 
 
-    public User? GetUserByUsername(string userName)
-    {
-        return _userRepository.GetUserByUsername(userName);
-    }
-
-    public string GetUserIdByUsername(string userName)
-    {
-        var user = _userRepository.GetUserByUsername(userName);
-        if (user == null) throw new InvalidDataException("The current user is not present in the database.");
-        return user.Id;
-    }
-
     public User CreateUserWithDefaultPassword(RegistrationRequest registrationRequest)
     {
         CreatePasswordHash("InvesTime&User123*", out var passwordHash, out var passwordSalt);
@@ -124,6 +112,7 @@ public class UserService : IUserService
         return true;
     }
 
+
     public bool DeleteConsultant(string username)
     {
         var user = _userRepository.GetUserByUsername(username);
@@ -139,16 +128,12 @@ public class UserService : IUserService
         return true;
     }
 
+
     private void DeleteAllUserStatisticsOfUsername(string username)
     {
         _userStatisticsRepository.DeleteUserStatistics(username);
     }
 
-
-    public bool IsUsernameTaken(string username)
-    {
-        return _userRepository.ExistsByUsername(username);
-    }
 
     public IList<User> GetAllConsultantsUnderManager()
     {
@@ -172,6 +157,7 @@ public class UserService : IUserService
         passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
     }
 
+
     public UserInfoDto GetUserInformation(User user, string token)
     {
         return new UserInfoDto
@@ -190,5 +176,69 @@ public class UserService : IUserService
             EmailConfirmed = user.EmailConfirmed,
             MeetingsNotificationsOff = user.MeetingsNotificationsOff,
         };
+    }
+
+
+    public bool IsUsernameTaken(string username)
+    {
+        return _userRepository.ExistsByUsername(username);
+    }
+
+
+    public User? GetUserByUsername(string userName)
+    {
+        return _userRepository.GetUserByUsername(userName);
+    }
+
+
+    public User? GetUserById(string id)
+    {
+        return _userRepository.GetUserById(id);
+    }
+
+    public IList<User> GetAllManagers()
+    {
+        return _userRepository.GetAllManagers();
+    }
+
+
+    public void UpdateCurrentUser(UserUpdateInfoDto userDto)
+    {
+        var id = _userHelper.GetCurrentUserId();
+        var user = GetUserById(id);
+        if (user == null) 
+            throw new InvalidDataException("The current user is not present in the database.");
+
+        if (!string.IsNullOrEmpty(userDto.Username) && userDto.Username != user.Username)
+        {
+            if (IsUsernameTaken(userDto.Username))
+                throw new InvalidDataException("The username is already taken.");
+        }
+
+        if (!string.IsNullOrEmpty(userDto.FirstName))
+            user.FirstName = userDto.FirstName;
+
+        if (!string.IsNullOrEmpty(userDto.LastName))
+            user.LastName = userDto.LastName;
+
+        if (!string.IsNullOrEmpty(userDto.Username))
+            user.Username = userDto.Username;
+
+        if (!string.IsNullOrEmpty(userDto.Email))
+            user.Email = userDto.Email;
+
+        if (!string.IsNullOrEmpty(userDto.PhoneNumber))
+            user.PhoneNumber = userDto.PhoneNumber;
+
+        if (!string.IsNullOrEmpty(userDto.Address))
+            user.Address = userDto.Address;
+
+        if (!string.IsNullOrEmpty(userDto.City))
+            user.City = userDto.City;
+
+        if (!string.IsNullOrEmpty(userDto.ManagerUsername))
+            user.ManagerUsername = userDto.ManagerUsername;
+
+        _userRepository.UpdateUser(user);
     }
 }

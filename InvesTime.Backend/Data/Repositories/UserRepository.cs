@@ -32,6 +32,11 @@ public class UserRepository : IUserRepository
         return _users.Find(user => user.Id == id).FirstOrDefault();
     }
 
+    public IList<User> GetAllManagers()
+    {
+        return _users.Find(user => user.IsAdmin == true).ToList();
+    }
+
     public bool ExistsByUsername(string username)
     {
         return _users.AsQueryable().Any(user => user.Username == username);
