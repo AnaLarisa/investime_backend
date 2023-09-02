@@ -73,6 +73,27 @@ public class ArticleFromManagerController : Controller
 
 
     /// <summary>
+    /// Admin - Update one article by Id.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="updatedArticleDto"></param>
+    /// <returns></returns>
+    [HttpPut("{id}", Name = "UpdateArticle")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult UpdateArticle(string id, [FromBody] ArticleFromManagerDto updatedArticleDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest($"One or more fields are not correct \n{updatedArticleDto}");
+
+        var updated = _articleFromManagerService.UpdateArticle(id, updatedArticleDto);
+        if (updated is false) 
+            return BadRequest($"The article with id = {id} was not found");
+
+        return Ok($"The article \"{updatedArticleDto.Title}\" has been updated successfully.");
+    }
+
+
+    /// <summary>
     /// Admin - Delete one article.
     /// </summary>
     /// <param name="id"></param>
@@ -82,7 +103,7 @@ public class ArticleFromManagerController : Controller
     {
         var result = _articleFromManagerService.DeleteArticle(id);
         if (result == false) 
-            return BadRequest($"Deletion operation failed for article with id: {id}");
+            return BadRequest($"Deletion operation FAILED for article with id: {id}");
 
         return Ok($"Deleted article with id = {id}");
     }

@@ -27,6 +27,13 @@ public class ArticleFromManagerRepository : IArticleFromManagerRepository
         _articles.InsertOne(article);
     }
 
+    public bool UpdateArticle(ArticleFromManager updatedArticle)
+    {
+        var filter = Builders<ArticleFromManager>.Filter.Eq(article => article.Id, updatedArticle.Id);
+        var result = _articles.ReplaceOne(filter, updatedArticle);
+        return result.ModifiedCount > 0;
+    }
+
     public bool DeleteArticle(string id)
     {
         var result = _articles.DeleteOne(article => article.Id == id);

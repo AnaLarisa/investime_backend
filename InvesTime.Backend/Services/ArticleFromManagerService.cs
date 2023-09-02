@@ -34,6 +34,32 @@ public class ArticleFromManagerService : IArticleFromManagerService
         return article;
     }
 
+    public bool UpdateArticle(string id, ArticleFromManagerDto updatedArticleDto)
+    {
+        var article = _repository.GetArticleById(id);
+
+        if (article == null)
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrEmpty(updatedArticleDto.Title))
+        {
+            article.Title = updatedArticleDto.Title;
+        }
+        if (!string.IsNullOrEmpty(updatedArticleDto.Content))
+        {
+            article.Content = updatedArticleDto.Content;
+        }
+        if (!string.IsNullOrEmpty(updatedArticleDto.Observations))
+        {
+            article.Observations = updatedArticleDto.Observations;
+        }
+
+        return _repository.UpdateArticle(article);
+    }
+
+
     public bool DeleteArticle(string id)
     {
         if (string.IsNullOrEmpty(id)) throw new ArgumentException("Article ID is required.");
