@@ -94,12 +94,15 @@ public class UserStatisticsService : IUserStatisticsService
         var currentUserStatistics = _userStatisticsRepository.GetUserStatisticsByUsername(username);
         if (currentUserStatistics == null)
         {
-            var newUserStatistics = new UserStatistics
+            currentUserStatistics = new UserStatistics
             {
                 Username = username
             };
-            _userStatisticsRepository.AddUserStatistics(newUserStatistics);
-            return newUserStatistics;
+
+            _userStatisticsRepository.AddUserStatistics(currentUserStatistics);
+            var userStatisticsAdded = _userStatisticsRepository.GetUserStatisticsByUsername(username);
+            if (userStatisticsAdded != null)
+                return userStatisticsAdded;
         }
         return currentUserStatistics;
     }
@@ -111,8 +114,8 @@ public class UserStatisticsService : IUserStatisticsService
             username = _userHelper.GetCurrentUserUsername();
         }
 
-        var userId = _userRepository.GetUserByUsername(username)!.Id;
-        var meet = _meetingRepository.GetMeetingsCountByUserIdDateRange(startDate, endDate, userId);
+        var userId = _userRepository.GetUserByUsername(username).Id;
+        var meetingsByMeetingType = _meetingRepository.GetMeetingsCountByUserIdDateRange(startDate, endDate, userId);
         var currentUserStatistics = GetUserStatistics();
 
         return new UserStatisticsDateRangeDto
@@ -122,7 +125,7 @@ public class UserStatisticsService : IUserStatisticsService
             TargetNrOfClientsPerYear = currentUserStatistics.TargetNrOfClientsPerYear,
             ContractsSigned = currentUserStatistics.ContractsSigned,
             ClientsCount = currentUserStatistics.ClientsCount,
-            MeetingsByMeetingType = meet
+            MeetingsByMeetingType = meetingsByMeetingType
         };
     }
 }

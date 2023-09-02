@@ -60,11 +60,11 @@ public class MeetingService : IMeetingService
     {
         var meeting = ObjectConverter.Convert<MeetingDto, Meeting>(meetingDto);
         meeting.UserId = _userHelper.GetCurrentUserId();
-        meeting.Id = new BsonObjectId(ObjectId.GenerateNewId()).ToString();
+        await _repository.AddMeeting(meeting);
 
         if (IsAdminAddAllowed(meeting))
         {
-            await AddMeetingsForAdmin(meeting);
+            await AddMeetingsForTeam(meeting);
         }
         else
         {
@@ -77,7 +77,6 @@ public class MeetingService : IMeetingService
                 _userStatisticsService.IncreaseNrOfClientsCount();
             }
         }
-
         return meeting;
     }
 
@@ -90,13 +89,12 @@ public class MeetingService : IMeetingService
                 meeting.Type == nameof(MeetingType.Training));
     }
 
-    private async Task AddMeetingsForAdmin(Meeting meeting)
+    private async Task AddMeetingsForTeam(Meeting meeting)
     {
         if (IsAdminAddAllowed(meeting))
         {
             var managerUsername = _userHelper.GetCurrentUserUsername();
             var consultants = _userRepository.GetAllConsultantUsernamesUnderManager(managerUsername);
-            await _repository.AddMeeting(meeting);
 
             foreach (var consultant in consultants)
             {

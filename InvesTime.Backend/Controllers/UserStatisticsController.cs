@@ -62,7 +62,7 @@ public class UserStatisticsController : ControllerBase
         try
         {
             var userStatisticsDateRange = _userStatisticsService.GetUserStatisticsDateRangeDto(startDate, endDate);
-            return userStatisticsDateRange;
+            return Ok(userStatisticsDateRange);
         }
         catch (Exception ex)
         {
