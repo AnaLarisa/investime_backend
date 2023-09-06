@@ -70,6 +70,11 @@ public class NewsApiRepository : INewsApiRepository
 
     private NewsModel CreateNewsModel(string title, string author, string url, string urlToImage)
     {
+        if (title.Contains("[Removed]"))
+        {
+            return null;
+        }
+
         if (string.IsNullOrWhiteSpace(title) && string.IsNullOrWhiteSpace(author) && string.IsNullOrWhiteSpace(urlToImage))
         {
             return null;
