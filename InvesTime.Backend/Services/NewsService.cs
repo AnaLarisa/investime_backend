@@ -16,4 +16,9 @@ public class NewsService : INewsService
     {
         return _newsApiRepository.GetTopBusinessHeadlines();
     }
+
+    public Task<NewsModel> GetOneTopBusinessHeadline()
+    {
+        return _newsApiRepository.GetOneTopBusinessHeadline();
+    }
 }

@@ -27,4 +27,14 @@ public class NewsController : ControllerBase
         var headlines = await _newsService.GetTopBusinessHeadlines();
         return Ok(headlines);
     }
+
+    /// <summary>
+    /// Gets the top business headlines
+    /// </summary>
+    [HttpGet("business/one")]
+    public async Task<ActionResult<NewsModel>> GetOneTopBusinessHeadline()
+    {
+        var headlines = await _newsService.GetOneTopBusinessHeadline();
+        return Ok(headlines);
+    }
 }

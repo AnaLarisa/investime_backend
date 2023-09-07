@@ -46,7 +46,7 @@ public class MeetingRepository : IMeetingRepository
     public bool DeleteAllMeetingsOfUserId(string userId)
     {
         var result = _meetings.DeleteMany(m => m.UserId == userId);
-        return result.DeletedCount > 0;
+        return result.DeletedCount >= 0;
     }
 
     public IList<Meeting> GetMeetingsByUserId(string userId)

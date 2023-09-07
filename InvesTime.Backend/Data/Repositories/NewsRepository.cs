@@ -68,6 +68,12 @@ public class NewsApiRepository : INewsApiRepository
         }
     }
 
+    public async Task<NewsModel> GetOneTopBusinessHeadline()
+    {
+        var newsList = await GetTopBusinessHeadlines();
+        return newsList.FirstOrDefault() ?? throw new InvalidOperationException("No news returned from the API.");
+    }
+
     private NewsModel CreateNewsModel(string title, string author, string url, string urlToImage)
     {
         if (title.Contains("[Removed]"))
