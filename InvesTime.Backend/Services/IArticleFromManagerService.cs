@@ -10,5 +10,6 @@ public interface IArticleFromManagerService
     bool DeleteArticle(string id);
     ArticleFromManager? GetArticleById(string id);
     IEnumerable<ArticleFromManager> GetArticles();
+    ArticleFromManager? GetLastArticle();
     IEnumerable<ArticleFromManager> SearchArticles(string title);
 }

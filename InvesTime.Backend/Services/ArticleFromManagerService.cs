@@ -19,6 +19,11 @@ public class ArticleFromManagerService : IArticleFromManagerService
         return _repository.GetArticles();
     }
 
+    public ArticleFromManager? GetLastArticle()
+    {
+        return _repository.GetArticles().LastOrDefault();
+    }
+
     public ArticleFromManager? GetArticleById(string id)
     {
         if (string.IsNullOrEmpty(id)) throw new ArgumentException("Article ID is required.");

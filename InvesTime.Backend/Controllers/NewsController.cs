@@ -29,12 +29,12 @@ public class NewsController : ControllerBase
     }
 
     /// <summary>
-    /// Gets the top business headlines
+    /// Gets one top business headline
     /// </summary>
     [HttpGet("business/one")]
     public async Task<ActionResult<NewsModel>> GetOneTopBusinessHeadline()
     {
-        var headlines = await _newsService.GetOneTopBusinessHeadline();
-        return Ok(headlines);
+        var headline = await _newsService.GetOneTopBusinessHeadline();
+        return Ok(headline);
     }
 }

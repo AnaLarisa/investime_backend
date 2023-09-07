@@ -29,6 +29,17 @@ public class ArticleFromManagerController : Controller
 
 
     /// <summary>
+    /// Gets one of the articles posted by the manager.
+    /// </summary>
+    [HttpGet("last", Name = "GetLastArticle")]
+    public IActionResult GetLastArticle()
+    {
+        var article = _articleFromManagerService.GetLastArticle();
+        return Ok(article);
+    }
+
+
+    /// <summary>
     /// Gets an article by its Id in the database.
     /// </summary>
     /// <param name="id"></param>
